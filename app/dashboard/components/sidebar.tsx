@@ -31,26 +31,9 @@ const I = {
       <path d="M3 12l9-9 9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9" />
     </svg>
   ),
-  globe: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M3.6 9h16.8M3.6 15h16.8M12 3c-2 2.5-3 5-3 9s1 6.5 3 9M12 3c2 2.5 3 5 3 9s-1 6.5-3 9" />
-    </svg>
-  ),
-  zap: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <path d="M13 2L4 14h7l-1 8 9-13h-7l1-7z" />
-    </svg>
-  ),
   barChart: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
       <path d="M18 20V10M12 20V4M6 20v-6" />
-    </svg>
-  ),
-  award: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <circle cx="12" cy="9" r="6" />
-      <path d="M9.09 14.5L8 22l4-2.5L16 22l-1.09-7.5" />
     </svg>
   ),
   factory: (
@@ -83,13 +66,6 @@ const I = {
       <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
     </svg>
   ),
-  server: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <rect x="2" y="2" width="20" height="8" rx="2" />
-      <rect x="2" y="14" width="20" height="8" rx="2" />
-      <path d="M6 6h.01M6 18h.01" />
-    </svg>
-  ),
 }
 
 const NAV: NavSection[] = [
@@ -97,10 +73,7 @@ const NAV: NavSection[] = [
     label: 'Vue Groupe',
     items: [
       { href: '/dashboard',                       label: 'Accueil',             icon: I.home,     exact: true },
-      { href: '/dashboard/groupe/carte',           label: 'Carte groupe',        icon: I.globe,    exact: true },
-      { href: '/dashboard/groupe/mix-energetique', label: 'Mix énergétique',     icon: I.zap },
       { href: '/dashboard/groupe/kpis',            label: 'KPIs croisés',        icon: I.barChart },
-      { href: '/dashboard/groupe/iso-50001',       label: 'Benchmark ISO 50001', icon: I.award },
     ],
   },
   {
@@ -123,7 +96,6 @@ const NAV: NavSection[] = [
     label: 'Administration',
     items: [
       { href: '/dashboard/admin/acces',          label: 'Gestion des accès',     icon: I.users },
-      { href: '/dashboard/admin/infrastructure', label: 'Statut infrastructure', icon: I.server },
     ],
   },
 ]

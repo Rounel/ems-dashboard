@@ -34,6 +34,7 @@ export type SiteAccent = 'blue' | 'emerald' | 'amber'
 export type SiteConfig = {
   slug: string
   name: string
+  fullName: string
   location: string
   accent: SiteAccent
   tabs: SiteTab[]
@@ -44,6 +45,7 @@ export type SiteConfig = {
 const SCCI1: SiteConfig = {
   slug: 'scci-1',
   name: 'SCCI 1',
+  fullName: "Société de Ciment de Côte d'Ivoire Usine 1",
   location: 'Ligne 1 — Cimenterie',
   accent: 'blue',
   tabs: [
@@ -298,6 +300,7 @@ const SCCI1: SiteConfig = {
 const SCCI2: SiteConfig = {
   slug: 'scci-2',
   name: 'SCCI 2',
+  fullName: "Société de Ciment de Côte d'Ivoire Usine 2",
   location: 'Ligne 2 — Cimenterie',
   accent: 'emerald',
   tabs: [
@@ -562,12 +565,13 @@ const SCCI2: SiteConfig = {
 const ACC: SiteConfig = {
   slug: 'acc',
   name: 'ACC',
+  fullName: 'Atlantic Cocoa Corporation',
   location: 'Atelier de Conditionnement Cacao',
   accent: 'amber',
   tabs: [
     {
       id: 'bilan',
-      label: 'Bilan global',
+      label: 'Vue globale',
       icon: 'gauge',
       zones: [
         {
@@ -600,46 +604,82 @@ const ACC: SiteConfig = {
       ],
     },
     {
-      id: 'zones',
-      label: 'Zones',
+      id: 'detail-points',
+      label: 'Détail par point',
       icon: 'building-factory',
       zones: [
         {
           letter: 'A', bgColor: '#FAEEDA', textColor: '#8B5500',
-          name: 'Usinage fèves — C3 (TGBT 1, NS 160H)',
-          source: 'InfluxDB · C3',
+          name: 'C1 — 01 Compteur – TGBT 1',
+          source: 'SOCOMEC DIRIS A40 · Modbus RS485',
           items: [
-            { icon: 'bolt',   text: 'Puissance + énergie atelier usinage' },
-            { icon: 'percentage', text: 'kWh Usinage / tonne usinée ERP' },
-            { icon: 'alert',  text: 'Détection surconsommation anormale', tag: 'ACC' },
+            { icon: 'bolt', text: 'Position : Aval Masterpact 2500A NW25 H1 – Niveau TGBT 1 (Ancien TGBT).', tag: 'ACC' },
+            { icon: 'layers', text: 'Couvre tous les départs TGBT 1 : Usinage fèves, Séchoir, Chaudière, Compresseur Air 1, Administration, Groupes GE D et GE B.' },
+            { icon: 'table', text: 'Compteur proposé : SOCOMEC DIRIS A40.' },
+            { icon: 'activity', text: 'Protocole : Modbus RS485.' },
           ],
         },
         {
           letter: 'B', bgColor: '#EAF3DE', textColor: '#27500A',
-          name: 'Séchoir thermique — C4 (TGBT 1, NS 100H)',
-          source: 'InfluxDB · C4',
+          name: 'C2 — 01 Compteur – TGBT 2',
+          source: 'SOCOMEC DIRIS A40 · Modbus RS485',
           items: [
-            { icon: 'sun',      text: 'Énergie C4 (électrique séchoir)' },
-            { icon: 'flame',    text: 'Croisé avec gaz C6 → kWh séchoir / tonne séchée' },
-            { icon: 'calendar', text: 'Historique 30 jours', tag: 'ACC' },
+            { icon: 'bolt', text: 'Position : Aval Masterpact 3200A – Niveau TGBT 2 (Nouveau TGBT).', tag: 'ACC' },
+            { icon: 'layers', text: 'Couvre tous les départs TGBT 2 : Broyeurs N5000-1, N5000-2, PG6000, Compresseurs 2, Infrarouge, Affineurs, Froid, UPS, Tour Cristallisation, GE J.' },
+            { icon: 'table', text: 'Compteur proposé : SOCOMEC DIRIS A40.' },
+            { icon: 'activity', text: 'Protocole : Modbus RS485.' },
           ],
         },
         {
           letter: 'C', bgColor: '#E6F1FB', textColor: '#0C447C',
-          name: 'Administration — C5 (TGBT 1, NS 100H)',
-          source: 'InfluxDB · C5',
+          name: 'C3 — 01 Compteur – Usinage',
+          source: 'SOCOMEC DIRIS A40 · Modbus RS485',
           items: [
-            { icon: 'armchair',   text: 'Puissance + énergie bâtiment admin' },
-            { icon: 'percentage', text: '% énergie Admin = C5 / (C1+C2) × 100' },
-            { icon: 'calendar',   text: 'Historique 30 jours', tag: 'ACC' },
+            { icon: 'bolt', text: 'Position : Départ NS 160H – Usinage fèves (TGBT 1).', tag: 'ACC' },
+            { icon: 'building-factory', text: 'Atelier physiquement distant du Local TGBT selon plan de masse PL13.' },
+            { icon: 'table', text: 'Compteur proposé : SOCOMEC DIRIS A40.' },
+            { icon: 'activity', text: 'Protocole : Modbus RS485.' },
+          ],
+        },
+        {
+          letter: 'D', bgColor: '#FAEEDA', textColor: '#8B5500',
+          name: 'C4 — 01 Compteur – Séchoir',
+          source: 'SOCOMEC DIRIS A40 · Modbus RS485',
+          items: [
+            { icon: 'sun', text: 'Position : Départ NS 100H – Séchoir (TGBT 1).', tag: 'ACC' },
+            { icon: 'flame', text: 'Process de séchage thermique identifié sur schéma.' },
+            { icon: 'table', text: 'Compteur proposé : SOCOMEC DIRIS A40.' },
+            { icon: 'activity', text: 'Protocole : Modbus RS485.' },
+          ],
+        },
+        {
+          letter: 'E', bgColor: '#EAF3DE', textColor: '#27500A',
+          name: 'C5 — 01 Compteur – Administration',
+          source: 'SOCOMEC DIRIS A40 · Modbus RS485',
+          items: [
+            { icon: 'armchair', text: 'Position : Départ NS 100H – Administration (TGBT 1).', tag: 'ACC' },
+            { icon: 'building-factory', text: 'Bâtiment administratif et bureaux.' },
+            { icon: 'table', text: 'Compteur proposé : SOCOMEC DIRIS A40.' },
+            { icon: 'activity', text: 'Protocole : Modbus RS485.' },
+          ],
+        },
+        {
+          letter: 'F', bgColor: '#FCEBEB', textColor: '#A32D2D',
+          name: 'C6 — 01 Compteur de Gaz – Séchoir',
+          source: 'Elster BK-G / Itron Gallus · M-Bus / Impulsion',
+          items: [
+            { icon: 'flame', text: 'Position : Arrivée gaz du Séchoir – Local gaz.', tag: 'ACC' },
+            { icon: 'alert', text: 'Localisation à confirmer sur audit terrain.' },
+            { icon: 'table', text: 'Compteur proposé : Elster BK-G / Itron Gallus.' },
+            { icon: 'activity', text: 'Protocole : M-Bus / Impulsion.' },
           ],
         },
       ],
       widgets: [
-        { label: 'Usinage C3',  type: 'Time series',  icon: 'bolt' },
-        { label: 'Séchoir C4',  type: 'Stat + gaz',   icon: 'sun' },
-        { label: 'Admin C5',    type: 'Courbe + stat', icon: 'armchair' },
-        { label: 'Ratios',      type: 'kWh/t croisés',icon: 'percentage' },
+        { label: 'C1 / C2',     type: 'TGBT principaux', icon: 'bolt' },
+        { label: 'C3 / C4',     type: 'Process atelier', icon: 'building-factory' },
+        { label: 'C5',          type: 'Administration',  icon: 'armchair' },
+        { label: 'C6',          type: 'Gaz séchoir',     icon: 'flame' },
       ],
     },
     {
@@ -677,36 +717,36 @@ const ACC: SiteConfig = {
     },
     {
       id: 'kpis',
-      label: 'KPIs process',
+      label: 'KPI',
       icon: 'chart-dots',
       zones: [
         {
           letter: 'A', bgColor: '#FAEEDA', textColor: '#8B5500',
-          name: 'KPIs énergie croisés ERP/SQL',
+          name: 'Tableau des KPI ACC',
           source: 'InfluxDB + ERP/SQL',
           items: [
-            { icon: 'bolt',   text: 'kWh / tonne cacao traité = (C1+C2) / tonnage ERP' },
-            { icon: 'sun',    text: 'kWh Séchoir / tonne séchée = C4 / tonnage séché' },
-            { icon: 'bolt',   text: 'kWh Usinage / tonne usinée = C3 / tonnage usiné' },
-            { icon: 'flame',  text: 'm³ gaz / tonne séchée = C6 / tonnage séché', tag: 'ACC' },
+            { icon: 'bolt',       text: 'kWh/tonne cacao traité = Énergie totale (C1+C2) / Tonnage ERP', tag: 'ACC' },
+            { icon: 'sun',        text: 'kWh Séchoir / tonne séchée = Énergie C4 / Tonnage séché ERP' },
+            { icon: 'flame',      text: 'm³ gaz / tonne séchée = Volume gaz C6 / Tonnage séché ERP' },
+            { icon: 'bolt',       text: 'kWh Usinage / tonne usinée = Énergie C3 / Tonnage usinage ERP' },
           ],
         },
         {
           letter: 'B', bgColor: '#EAF3DE', textColor: '#27500A',
-          name: 'Objectifs & PUE',
+          name: 'Ratios d’usage et intégration solaire',
           source: 'InfluxDB + ERP/SQL',
           items: [
-            { icon: 'percentage', text: '% énergie Admin = C5/(C1+C2) × 100' },
-            { icon: 'percentage', text: 'PUE Process = énergie process / énergie totale' },
-            { icon: 'target',     text: 'Objectif vs réalisé ISO 50001' },
+            { icon: 'percentage', text: '% énergie Administration = C5 / (C1+C2) × 100' },
+            { icon: 'circle-dot', text: 'PUE Process (ratio usages) = Énergie process / Énergie totale' },
+            { icon: 'sun',        text: 'Part Solaire PV (si site PV) = kWh PV / kWh total × 100' },
           ],
         },
       ],
       widgets: [
         { label: 'kWh/t cacao', type: 'Stat + flèche',    icon: 'bolt' },
-        { label: 'm³/t séchée', type: 'Stat + flèche',    icon: 'flame' },
-        { label: 'vs objectif', type: 'Barre ±',           icon: 'target' },
-        { label: 'PUE',         type: 'Jauge circulaire', icon: 'circle-dot' },
+        { label: 'Séchoir',     type: 'kWh/t + m³/t',      icon: 'sun' },
+        { label: 'Admin',       type: '% énergie',         icon: 'percentage' },
+        { label: 'PUE / PV',    type: 'Ratios usages',     icon: 'circle-dot' },
       ],
     },
     {
