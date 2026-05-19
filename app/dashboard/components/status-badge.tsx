@@ -15,7 +15,7 @@ export default function StatusBadge({ status, label }: Props) {
   const { dot, text } = CONFIG[status]
   const display = label ?? CONFIG[status].label
   return (
-    <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${text}`}>
+    <span className={`inline-flex items-center gap-1.5 text-base font-medium ${text}`}>
       <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
       {display}
     </span>

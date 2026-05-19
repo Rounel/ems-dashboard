@@ -10,7 +10,7 @@ function GenerateButton({ label }: { label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-gray-400 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+      className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-base font-medium text-black transition-colors hover:border-gray-400 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
     >
       {pending ? (
         <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600" />
@@ -27,7 +27,7 @@ function GenerateButton({ label }: { label: string }) {
 function StatusBanner({ state }: { state: GenerateState }) {
   if (!state) return null
   return (
-    <p className={`rounded-lg px-3 py-2 text-sm ${state.ok ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+    <p className={`rounded-lg px-3 py-2 text-base ${state.ok ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
       {state.message}
     </p>
   )

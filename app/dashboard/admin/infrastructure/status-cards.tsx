@@ -38,24 +38,24 @@ function ServiceCard({ svc }: { svc: InfraService }) {
     <div className="rounded-xl border border-gray-200 bg-white p-4">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-gray-400">{TYPE_ICON[svc.type]}</span>
+          <span className="text-black">{TYPE_ICON[svc.type]}</span>
           <div>
-            <p className="text-sm font-medium text-gray-900">{svc.name}</p>
-            <p className="text-xs text-gray-500">{svc.site}</p>
+            <p className="text-base font-medium text-black">{svc.name}</p>
+            <p className="text-base text-black">{svc.site}</p>
           </div>
         </div>
         <span className={`h-2 w-2 rounded-full mt-1 ${cfg.dot}`} />
       </div>
       <div className="flex items-center justify-between">
-        <span className={`text-xs font-medium ${cfg.text}`}>{cfg.label}</span>
+        <span className={`text-base font-medium ${cfg.text}`}>{cfg.label}</span>
         {svc.latencyMs !== null && (
-          <span className={`text-xs font-mono ${svc.latencyMs > 100 ? 'text-amber-600' : 'text-gray-500'}`}>
+          <span className={`text-base font-mono ${svc.latencyMs > 100 ? 'text-amber-600' : 'text-black'}`}>
             {svc.latencyMs} ms
           </span>
         )}
       </div>
-      <p className="mt-2 text-xs text-gray-500 truncate">{svc.detail}</p>
-      <p className="mt-1 text-[10px] text-gray-400">Vérifié {svc.lastChecked}</p>
+      <p className="mt-2 text-base text-black truncate">{svc.detail}</p>
+      <p className="mt-1 text-base text-black">Vérifié {svc.lastChecked}</p>
     </div>
   )
 }
@@ -63,7 +63,7 @@ function ServiceCard({ svc }: { svc: InfraService }) {
 function ServiceGroup({ title, svcs }: { title: string; svcs: InfraService[] }) {
   return (
     <div>
-      <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500">{title}</p>
+      <p className="mb-3 text-base font-semibold uppercase tracking-widest text-black">{title}</p>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {svcs.map((s) => <ServiceCard key={s.id} svc={s} />)}
       </div>
@@ -92,7 +92,7 @@ export default function InfraStatusCards({ initialServices }: { initialServices:
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div className="flex gap-4 text-xs text-gray-500">
+        <div className="flex gap-4 text-base text-black">
           {Object.entries(STATUS_CFG).map(([k, v]) => (
             <span key={k} className="flex items-center gap-1.5">
               <span className={`h-1.5 w-1.5 rounded-full ${v.dot}`} />
@@ -102,7 +102,7 @@ export default function InfraStatusCards({ initialServices }: { initialServices:
         </div>
         <button
           onClick={handleRefresh}
-          className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-900"
+          className="flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-base text-black transition-colors hover:border-gray-400 hover:text-black"
         >
           <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" className="h-3 w-3">
             <path d="M1 7A6 6 0 1012 4M12 1v3H9" />

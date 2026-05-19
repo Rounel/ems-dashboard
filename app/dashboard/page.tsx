@@ -79,25 +79,25 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Sites</p>
-          <p className="mt-2 text-2xl lg:text-4xl font-bold">
+          <p className="text-base font-medium uppercase tracking-wider text-black">Sites</p>
+          <p className="mt-2 text-base lg:text-base font-bold">
             {SITES.length}
           </p>
-          <p className="mt-1 text-xs text-gray-400">
+          <p className="mt-1 text-base text-black">
             {SITES.filter((s) => s.status === 'warning').length} site(s) en alerte
           </p>
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Points de mesure</p>
-          <p className="mt-2 text-2xl lg:text-4xl font-bold">26</p>
-          <p className="mt-1 text-xs text-gray-400">Somme des 3 sites</p>
+          <p className="text-base font-medium uppercase tracking-wider text-black">Points de mesure</p>
+          <p className="mt-2 text-base lg:text-base font-bold">26</p>
+          <p className="mt-1 text-base text-black">Somme des 3 sites</p>
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Alertes actives</p>
-          <p className={`mt-2 text-2xl lg:text-4xl font-bold ${activeAlerts > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>
+          <p className="text-base font-medium uppercase tracking-wider text-black">Alertes actives</p>
+          <p className={`mt-2 text-base lg:text-base font-bold ${activeAlerts > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>
             {activeAlerts}
           </p>
-          <p className="mt-1 text-xs text-gray-400">{ALERTS.length} alertes sur 30 jours</p>
+          <p className="mt-1 text-base text-black">{ALERTS.length} alertes sur 30 jours</p>
         </div>
       </div>
 
@@ -112,25 +112,25 @@ export default function DashboardPage() {
             <div key={block.label} className="rounded-xl border border-gray-200 bg-white p-5">
               <div className={` ${block.bg} p-3 rounded-lg`}>
                 <div className="flex items-start justify-between gap-3">
-                  <p className="text-xs font-medium uppercase tracking-wider text-gray-200">{block.label}</p>
+                  <p className="text-base font-medium uppercase tracking-wider text-black">{block.label}</p>
                   <div className="bg-white rounded-full size-14 flex justify-center items-center">
                     <block.icon className={`size-8 ${block.accent}`} />
                   </div>
                 </div>
                 <div className="flex justify-between items-end">
                   <div className="">
-                    <p className="text-xs md:text-sm lg:text-base font-medium text-gray-100">Total</p>
-                    <p className={`text-2xl lg:text-4xl font-bold text-white`}>
+                    <p className="text-base md:text-base lg:text-base font-medium text-black">Total</p>
+                    <p className={`text-base lg:text-base font-bold text-black`}>
                       {formatNumber(total)} {block.unit}
                     </p>
                   </div>
-                  <span className={`rounded-full border px-2 py-0.5 text-[10px] h-fit font-semibold ${status.badge}`}>
+                  <span className={`rounded-full border px-2 py-0.5 text-base h-fit font-semibold ${status.badge}`}>
                     {status.label}
                   </span>
                 </div>
                 <div className="mt-4 rounded-lg border border-gray-100 bg-gray-50 p-3">
-                  <div className="mb-2 flex items-center justify-between text-xs">
-                    <span className="font-medium text-gray-500">Seuil d&apos;utilisation</span>
+                  <div className="mb-2 flex items-center justify-between text-base">
+                    <span className="font-medium text-black">Seuil d&apos;utilisation</span>
                     <span className={`font-semibold ${status.text}`}>
                       {warningUsage.toFixed(0)} % du seuil
                     </span>
@@ -138,7 +138,7 @@ export default function DashboardPage() {
                   <div className="h-2 overflow-hidden rounded-full bg-gray-200">
                     <div className={`h-full rounded-full ${status.bg}`} style={{ width: `${criticalUsage}%` }} />
                   </div>
-                  <div className="mt-2 flex items-center justify-between text-[11px] text-gray-500">
+                  <div className="mt-2 flex items-center justify-between text-base text-black">
                     <span>Seuil {formatNumber(block.warning)} {block.unit}</span>
                     <span>Critique {formatNumber(block.critical)} {block.unit}</span>
                   </div>
@@ -146,12 +146,12 @@ export default function DashboardPage() {
               </div>
               <div className="mt-4 space-y-2 border-t border-gray-100 pt-4">
                 {block.values.map((item) => (
-                  <div key={item.site} className="flex items-center justify-between text-sm bg-gray-500/10 rounded-lg p-2">
+                  <div key={item.site} className="flex items-center justify-between text-base bg-gray-500/10 rounded-lg p-2">
                     <div className="flex gap-4 items-center">
-                      <Factory className="size-6 text-gray-600" />
-                      <span className="text-xs md:text-sm lg:text-base font-medium text-gray-700">{item.site}</span>
+                      <Factory className="size-6 text-black" />
+                      <span className="text-base md:text-base lg:text-base font-medium text-black">{item.site}</span>
                     </div>
-                    <span className="text-xs md:text-sm lg:text-base font-semibold text-gray-900">
+                    <span className="text-base md:text-base lg:text-base font-semibold text-black">
                       {formatNumber(item.value)} {block.unit}
                     </span>
                   </div>

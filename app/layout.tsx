@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "EMS Dashboard",
+  title: "Atlantic Group Supervisor",
   description: "Supervision et monitoring des sites industriels",
 };
 

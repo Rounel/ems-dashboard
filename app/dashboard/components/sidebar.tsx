@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -66,6 +67,12 @@ const I = {
       <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
     </svg>
   ),
+  sliders: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+      <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3" />
+      <path d="M1 14h6M9 8h6M17 16h6" />
+    </svg>
+  ),
 }
 
 const NAV: NavSection[] = [
@@ -73,7 +80,7 @@ const NAV: NavSection[] = [
     label: 'Vue Groupe',
     items: [
       { href: '/dashboard',                       label: 'Accueil',             icon: I.home,     exact: true },
-      { href: '/dashboard/groupe/kpis',            label: 'KPIs croisés',        icon: I.barChart },
+      { href: '/dashboard/groupe/kpis',            label: 'KPIs',        icon: I.barChart },
     ],
   },
   {
@@ -95,6 +102,7 @@ const NAV: NavSection[] = [
   {
     label: 'Administration',
     items: [
+      { href: '/dashboard/profil-supervision', label: 'Profil de Supervision', icon: I.sliders },
       { href: '/dashboard/admin/acces',          label: 'Gestion des accès',     icon: I.users },
     ],
   },
@@ -111,14 +119,12 @@ export default function Sidebar() {
 
       {/* Brand */}
       <div className="h-14 shrink-0 flex items-center gap-2.5 px-4 border-b border-gray-200">
-        <div className="w-7 h-7 shrink-0 bg-blue-600 rounded-lg flex items-center justify-center">
-          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
+        <div className="w-7 h-7 shrink-0 rounded-lg flex items-center justify-center">
+          <Image src="/logo_ag.jpg" alt="Atlantic Group" width={28} height={28} />
         </div>
         <div className="min-w-0 leading-none">
-          <p className="text-sm font-semibold text-gray-900">EMS Dashboard</p>
-          <p className="text-[10px] text-gray-400 mt-0.5">Direction Énergie</p>
+          <p className="text-base font-semibold text-black">Atlantic Group Supervisor</p>
+          <p className="text-base text-black mt-0.5">Backoffice</p>
         </div>
       </div>
 
@@ -126,7 +132,7 @@ export default function Sidebar() {
       <nav className="flex-1 px-2 py-4 space-y-5">
         {NAV.map((section) => (
           <div key={section.label}>
-            <p className="px-2 mb-1 text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+            <p className="px-2 mb-1 text-base font-semibold uppercase tracking-widest text-black">
               {section.label}
             </p>
             <ul className="space-y-0.5">
@@ -136,20 +142,20 @@ export default function Sidebar() {
                   <li key={item.label}>
                     <Link
                       href={item.href}
-                      className={`group flex items-center gap-2.5 rounded-lg px-2 py-[7px] text-sm transition-colors duration-100 ${
+                      className={`group flex items-center gap-2.5 rounded-lg px-2 py-[7px] text-base transition-colors duration-100 ${
                         on
                           ? 'bg-blue-50 text-blue-700'
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                          : 'text-black hover:bg-gray-50 hover:text-black'
                       }`}
                     >
-                      <span className={`shrink-0 transition-colors ${on ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600'}`}>
+                      <span className={`shrink-0 transition-colors ${on ? 'text-blue-600' : 'text-black group-hover:text-black'}`}>
                         {item.icon}
                       </span>
 
                       <span className="flex-1 truncate">{item.label}</span>
 
                       {item.badge !== undefined && (
-                        <span className="shrink-0 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                        <span className="shrink-0 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-base font-bold text-white">
                           {item.badge}
                         </span>
                       )}
@@ -167,7 +173,7 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="shrink-0 border-t border-gray-200 px-4 py-3">
-        <p className="text-[10px] text-gray-400">v0.1.0 · EMS Backoffice</p>
+        <p className="text-base text-black">v0.1.0 · Atlantic Group Supervisor</p>
       </div>
     </aside>
   )

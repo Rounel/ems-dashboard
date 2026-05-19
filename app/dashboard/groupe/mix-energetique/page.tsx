@@ -20,10 +20,10 @@ export default function MixEnergetiqueePage() {
       <div className="grid grid-cols-4 gap-4">
         {ENERGY_COSTS.map((row) => (
           <div key={row.site} className="rounded-xl border border-gray-200 bg-white p-5">
-            <p className="text-xs font-medium uppercase tracking-wider text-gray-500">{row.site}</p>
-            <p className="mt-2 text-xl font-bold text-gray-900">{(row.total / 1_000_000).toFixed(1)} M</p>
-            <p className="mt-0.5 text-xs text-gray-500">FCFA / mois</p>
-            <div className="mt-3 space-y-1 text-xs text-gray-500">
+            <p className="text-base font-medium uppercase tracking-wider text-black">{row.site}</p>
+            <p className="mt-2 text-base font-bold text-black">{(row.total / 1_000_000).toFixed(1)} M</p>
+            <p className="mt-0.5 text-base text-black">FCFA / mois</p>
+            <div className="mt-3 space-y-1 text-base text-black">
               <div className="flex justify-between"><span>Réseau CIE</span><span>{(row.cie / 1_000_000).toFixed(1)} M</span></div>
               <div className="flex justify-between"><span>GE</span><span>{(row.ge / 1_000_000).toFixed(1)} M</span></div>
               <div className="flex justify-between"><span>Gaz</span><span>{(row.gaz / 1_000_000).toFixed(1)} M</span></div>
@@ -31,10 +31,10 @@ export default function MixEnergetiqueePage() {
           </div>
         ))}
         <div className="rounded-xl border border-blue-200 bg-blue-50 p-5">
-          <p className="text-xs font-medium uppercase tracking-wider text-blue-700">Total Groupe</p>
-          <p className="mt-2 text-xl font-bold text-blue-700">{(totalCost / 1_000_000).toFixed(1)} M</p>
-          <p className="mt-0.5 text-xs text-blue-600">FCFA / mois</p>
-          <p className="mt-3 text-xs text-blue-700">{formatFcfa(totalCost)}</p>
+          <p className="text-base font-medium uppercase tracking-wider text-blue-700">Total Groupe</p>
+          <p className="mt-2 text-base font-bold text-blue-700">{(totalCost / 1_000_000).toFixed(1)} M</p>
+          <p className="mt-0.5 text-base text-blue-600">FCFA / mois</p>
+          <p className="mt-3 text-base text-blue-700">{formatFcfa(totalCost)}</p>
         </div>
       </div>
 

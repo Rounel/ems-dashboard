@@ -25,15 +25,15 @@ function AlertSection({
   return (
     <div className="rounded-xl border border-gray-200 bg-white">
       <div className="flex items-center justify-between border-b border-gray-200 px-5 py-3">
-        <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
-        <span className="text-xs text-gray-500">{alerts.filter(a => a.status === 'active').length} actives</span>
+        <h3 className="text-base font-semibold text-black">{title}</h3>
+        <span className="text-base text-black">{alerts.filter(a => a.status === 'active').length} actives</span>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-200">
               {['Niveau', 'Message', 'Site', 'Horodatage', ''].map((h) => (
-                <th key={h} className="px-5 py-2.5 text-left text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                <th key={h} className="px-5 py-2.5 text-left text-base font-semibold uppercase tracking-wider text-black">
                   {h}
                 </th>
               ))}
@@ -43,23 +43,23 @@ function AlertSection({
             {alerts.map((a) => (
               <tr key={a.id} className={`border-b border-gray-100 transition-colors ${a.status === 'acknowledged' ? 'opacity-50' : ''}`}>
                 <td className="px-5 py-3 whitespace-nowrap">
-                  <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold ${LEVEL_CFG[a.level].badge}`}>
+                  <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-base font-semibold ${LEVEL_CFG[a.level].badge}`}>
                     <span className={`h-1.5 w-1.5 rounded-full ${LEVEL_CFG[a.level].dot}`} />
                     {LEVEL_CFG[a.level].label}
                   </span>
                 </td>
-                <td className="px-5 py-3 text-sm text-gray-700 max-w-xs">{a.message}</td>
-                <td className="px-5 py-3 text-xs text-gray-500 whitespace-nowrap">{a.site}</td>
-                <td className="px-5 py-3 text-xs text-gray-400 whitespace-nowrap">
+                <td className="px-5 py-3 text-base text-black max-w-xs">{a.message}</td>
+                <td className="px-5 py-3 text-base text-black whitespace-nowrap">{a.site}</td>
+                <td className="px-5 py-3 text-base text-black whitespace-nowrap">
                   {new Date(a.timestamp).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
                 </td>
                 <td className="px-5 py-3 text-right">
                   {a.status === 'acknowledged' ? (
-                    <span className="text-xs text-gray-400">Acquitté</span>
+                    <span className="text-base text-black">Acquitté</span>
                   ) : (
                     <button
                       onClick={() => onAck(a.id)}
-                      className="rounded-md border border-gray-300 bg-white px-2.5 py-1 text-xs font-medium text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-900"
+                      className="rounded-md border border-gray-300 bg-white px-2.5 py-1 text-base font-medium text-black transition-colors hover:border-gray-400 hover:text-black"
                     >
                       Acquitter
                     </button>
@@ -126,18 +126,18 @@ export default function AlertList({ initialAlerts }: { initialAlerts: Alert[] })
         <select
           value={filters.level}
           onChange={(e) => setFilters((f) => ({ ...f, level: e.target.value as AlertLevel | 'all' }))}
-          className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-base text-black focus:outline-none focus:ring-1 focus:ring-blue-500"
         >
           {LEVEL_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
         <select
           value={filters.status}
           onChange={(e) => setFilters((f) => ({ ...f, status: e.target.value as AlertStatus | 'all' }))}
-          className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-base text-black focus:outline-none focus:ring-1 focus:ring-blue-500"
         >
           {STATUS_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
-        <span className="text-xs text-gray-400">{filtered.length} alerte{filtered.length !== 1 ? 's' : ''} — Journal 30 jours</span>
+        <span className="text-base text-black">{filtered.length} alerte{filtered.length !== 1 ? 's' : ''} — Journal 30 jours</span>
       </div>
 
       <AlertSection title="Alertes Administrateur"    alerts={adminAlerts} onAck={handleAck} />
@@ -145,7 +145,7 @@ export default function AlertList({ initialAlerts }: { initialAlerts: Alert[] })
 
       {filtered.length === 0 && (
         <div className="rounded-xl border border-gray-200 bg-white p-10 text-center">
-          <p className="text-gray-500 text-sm">Aucune alerte pour ces filtres.</p>
+          <p className="text-black text-base">Aucune alerte pour ces filtres.</p>
         </div>
       )}
     </div>

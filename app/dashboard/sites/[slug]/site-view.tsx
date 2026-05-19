@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import type { SiteConfig, SiteAccent, SiteTab, Zone } from '@/app/lib/site-data'
+import { useDateFilter } from '@/app/dashboard/components/date-filter'
 
 // ── Icon lookup ───────────────────────────────────────────────────────────────
 
@@ -123,13 +124,13 @@ function ZonePanel({ zone }: { zone: Zone }) {
       {/* Zone header */}
       <div className="flex items-start gap-3">
         <span
-          className="h-7 w-7 rounded-lg flex items-center justify-center text-sm font-bold shrink-0"
+          className="h-7 w-7 rounded-lg flex items-center justify-center text-base font-bold shrink-0"
           style={{ background: zone.bgColor, color: zone.textColor }}
         >
           {zone.letter}
         </span>
         <div className="min-w-0">
-          <h2 className="text-base font-semibold text-gray-900 leading-tight">{zone.name}</h2>
+          <h2 className="text-base font-semibold text-black leading-tight">{zone.name}</h2>
         </div>
       </div>
 
@@ -141,12 +142,12 @@ function ZonePanel({ zone }: { zone: Zone }) {
               key={i}
               className={`flex items-start gap-2.5 py-2 border-b border-gray-50 last:border-0 ${item.full ? 'col-span-2' : ''}`}
             >
-              <Icon name={item.icon} className="h-4 w-4 text-gray-400 shrink-0 mt-0.5" />
-              <span className="text-sm text-gray-700 leading-snug flex-1">
+              <Icon name={item.icon} className="h-4 w-4 text-black shrink-0 mt-0.5" />
+              <span className="text-base text-black leading-snug flex-1">
                 {item.text}
                 {item.tag && (
                   <span
-                    className="ml-1.5 inline-flex px-1.5 py-0.5 text-[9px] font-semibold rounded-full"
+                    className="ml-1.5 inline-flex px-1.5 py-0.5 text-sm font-semibold rounded-full"
                     style={{
                       background: TAG_STYLE[item.tag]?.bg ?? '#f3f4f6',
                       color:      TAG_STYLE[item.tag]?.text ?? '#374151',
@@ -172,6 +173,8 @@ const ACC_DASHBOARD_METRICS = [
   { label: 'Énergie jour', value: '8 920 kWh', detail: '+0,9 % vs J-1', icon: 'hash', accent: 'text-blue-700', bar: 61 },
   { label: 'Gaz séchoir', value: '410 m³', detail: 'C6 · 76 % seuil jour', icon: 'flame', accent: 'text-emerald-700', bar: 76 },
   { label: 'KPI cacao', value: '80,9 kWh/t', detail: 'Objectif 78,0 kWh/t', icon: 'target', accent: 'text-red-700', bar: 104 },
+  { label: 'Compteurs', value: '6', detail: 'C1 à C6 supervisés', icon: 'table', accent: 'text-black', bar: 100 },
+  { label: 'Points de mesure', value: '78', detail: 'Grandeurs électriques + gaz', icon: 'circle-dot', accent: 'text-blue-700', bar: 78 },
 ]
 
 const ACC_POINT_STATUS = [
@@ -189,6 +192,90 @@ const ACC_LOAD_PROFILE = [
   { label: 'Admin C5', value: 7, color: 'bg-blue-500' },
   { label: 'Autres TGBT', value: 49, color: 'bg-gray-400' },
 ]
+
+type IndustrialSiteData = {
+  metrics: Array<{ label: string; value: string; detail: string; icon: string; accent: string; bar: number }>
+  points: Array<{ ref: string; label: string; value: string; status: string; color: string }>
+  profile: Array<{ label: string; value: number; color: string }>
+  quality: Array<{ label: string; value: string; color: string }>
+  alerts: string[]
+  kpis: Array<{ label: string; value: string; target: string; gap: string; formula: string; status: 'ok' | 'watch' | 'alert' }>
+}
+
+const INDUSTRIAL_SITE_DATA: Record<string, IndustrialSiteData> = {
+  'scci-1': {
+    metrics: [
+      { label: 'Puissance instantanÃ©e', value: '2 180 kW', detail: 'C1+C2 Â· 81 % souscrit', icon: 'bolt', accent: 'text-blue-700', bar: 81 },
+      { label: 'Ã‰nergie jour', value: '42,6 MWh', detail: '+2,4 % vs J-1', icon: 'hash', accent: 'text-emerald-700', bar: 68 },
+      { label: 'Carburant GE', value: '1 240 L', detail: 'GE1/GE2 Â· 64 % seuil jour', icon: 'droplet', accent: 'text-amber-700', bar: 64 },
+      { label: 'kWh / tonne', value: '91,4', detail: 'Objectif 88,0 kWh/t', icon: 'target', accent: 'text-red-700', bar: 104 },
+      { label: 'Compteurs', value: '12', detail: 'DIRIS + HTA + GE + carburant', icon: 'table', accent: 'text-black', bar: 100 },
+      { label: 'Points de mesure', value: '156', detail: 'Mesures électriques et carburant', icon: 'circle-dot', accent: 'text-blue-700', bar: 86 },
+    ],
+    points: [
+      { ref: 'C1', label: 'TGBT 1', value: '24,8 MWh', status: 'OK', color: 'bg-emerald-500' },
+      { ref: 'C2', label: 'Administration', value: '3,4 MWh', status: 'OK', color: 'bg-emerald-500' },
+      { ref: 'C3', label: 'ExpÃ©dition', value: '5,8 MWh', status: 'Surveiller', color: 'bg-amber-500' },
+      { ref: 'HTA', label: 'Salle 6 kV', value: '12,6 MWh', status: 'Surveiller', color: 'bg-amber-500' },
+      { ref: 'GE1', label: 'Groupe GE1', value: '620 L', status: 'OK', color: 'bg-emerald-500' },
+      { ref: 'CUVE', label: 'Carburant', value: '38 %', status: 'OK', color: 'bg-emerald-500' },
+    ],
+    profile: [
+      { label: 'Broyage / HTA', value: 38, color: 'bg-blue-500' },
+      { label: 'ExpÃ©dition C3', value: 14, color: 'bg-amber-500' },
+      { label: 'Administration C2', value: 8, color: 'bg-emerald-500' },
+      { label: 'Autres process', value: 40, color: 'bg-gray-400' },
+    ],
+    quality: [
+      { label: 'cos Ï† global', value: '0,93', color: 'text-emerald-700' },
+      { label: 'THD moyen', value: '4,7 %', color: 'text-amber-700' },
+      { label: 'DÃ©sÃ©quilibre phases', value: '6,2 %', color: 'text-amber-700' },
+    ],
+    alerts: ['C3 Â· Courant L2 proche seuil', 'Salle 6 kV Â· THD > 5 % sur 12 min'],
+    kpis: [
+      { label: 'kWh / tonne ciment produite', value: '91,4 kWh/t', target: '88,0 kWh/t', gap: '+3,9 %', formula: 'Ã‰nergie totale / Tonnage ERP', status: 'watch' },
+      { label: 'L carburant / tonne ciment', value: '2,7 L/t', target: '3,0 L/t', gap: '-10,0 %', formula: 'Litres carburant / Tonnage ERP', status: 'ok' },
+      { label: '% Ã©nergie Administration', value: '8,0 %', target: '9,0 %', gap: '-1,0 pt', formula: 'C2 / (C1+C2) Ã— 100', status: 'ok' },
+      { label: 'PUE Process', value: '0,86', target: '0,88', gap: '-2,3 %', formula: 'Ã‰nergie process / Ã‰nergie totale', status: 'watch' },
+    ],
+  },
+  'scci-2': {
+    metrics: [
+      { label: 'Puissance instantanÃ©e', value: '1 960 kW', detail: 'C1 Â· 76 % souscrit', icon: 'bolt', accent: 'text-emerald-700', bar: 76 },
+      { label: 'Ã‰nergie jour', value: '38,2 MWh', detail: '-1,1 % vs J-1', icon: 'hash', accent: 'text-blue-700', bar: 59 },
+      { label: 'Gaz process', value: '1 520 mÂ³', detail: 'C9 Â· 69 % seuil jour', icon: 'flame', accent: 'text-amber-700', bar: 69 },
+      { label: 'kWh / tonne', value: '84,6', detail: 'Objectif 86,0 kWh/t', icon: 'target', accent: 'text-emerald-700', bar: 98 },
+      { label: 'Compteurs', value: '9', detail: 'C1 à C9 supervisés', icon: 'table', accent: 'text-black', bar: 100 },
+      { label: 'Points de mesure', value: '117', detail: 'Mesures électriques + gaz', icon: 'circle-dot', accent: 'text-emerald-700', bar: 82 },
+    ],
+    points: [
+      { ref: 'C1', label: 'GÃ©nÃ©ral usine', value: '38,2 MWh', status: 'OK', color: 'bg-emerald-500' },
+      { ref: 'C2', label: 'Administration', value: '2,8 MWh', status: 'OK', color: 'bg-emerald-500' },
+      { ref: 'C3+C4', label: 'ExpÃ©dition', value: '6,1 MWh', status: 'OK', color: 'bg-emerald-500' },
+      { ref: 'C6', label: 'Compresseurs', value: '4,4 MWh', status: 'Surveiller', color: 'bg-amber-500' },
+      { ref: 'C7+C8', label: 'GE', value: '0,8 MWh', status: 'OK', color: 'bg-emerald-500' },
+      { ref: 'C9', label: 'Gaz', value: '1 520 mÂ³', status: 'Surveiller', color: 'bg-amber-500' },
+    ],
+    profile: [
+      { label: 'ExpÃ©dition C3+C4', value: 16, color: 'bg-emerald-500' },
+      { label: 'Compresseurs C6', value: 12, color: 'bg-amber-500' },
+      { label: 'Administration C2', value: 7, color: 'bg-blue-500' },
+      { label: 'Autres process', value: 65, color: 'bg-gray-400' },
+    ],
+    quality: [
+      { label: 'cos Ï† global', value: '0,95', color: 'text-emerald-700' },
+      { label: 'THD moyen', value: '3,9 %', color: 'text-emerald-700' },
+      { label: 'DisponibilitÃ© flux', value: '99,8 %', color: 'text-emerald-700' },
+    ],
+    alerts: ['C6 Â· Compresseurs +9 % vs profil', 'C9 Â· Gaz proche seuil journalier'],
+    kpis: [
+      { label: 'kWh / tonne ciment produite', value: '84,6 kWh/t', target: '86,0 kWh/t', gap: '-1,6 %', formula: 'C1 / Tonnage ERP', status: 'ok' },
+      { label: 'mÂ³ gaz / tonne ciment', value: '3,4 mÂ³/t', target: '3,2 mÂ³/t', gap: '+6,3 %', formula: 'C9 / Tonnage ERP', status: 'watch' },
+      { label: 'kWh ExpÃ©dition / tonne expÃ©diÃ©e', value: '13,5 kWh/t', target: '14,0 kWh/t', gap: '-3,6 %', formula: '(C3+C4) / Tonnage expÃ©diÃ©', status: 'ok' },
+      { label: 'PUE Process', value: '0,89', target: '0,90', gap: '-1,1 %', formula: '(C3+C4+C6) / C1', status: 'watch' },
+    ],
+  },
+}
 
 const ACC_KPI_INPUTS = {
   totalEnergyKwh: 8920,
@@ -481,17 +568,22 @@ const ACC_SINGLE_LINE_LINKS: SingleLineLink[] = [
 ]
 
 function AccGlobalDashboard() {
+  const dateFilter = useDateFilter()
+
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-4 gap-4">
+      <div className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-base text-blue-900">
+        Données agrégées sur la période active : <span className="font-semibold">{dateFilter.label}</span>
+      </div>
+      <div className="grid grid-cols-3 gap-4">
         {ACC_DASHBOARD_METRICS.map((metric) => (
           <div key={metric.label} className="rounded-xl border border-gray-200 bg-white p-5">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-medium uppercase tracking-wider text-gray-500">{metric.label}</p>
-              <Icon name={metric.icon} className="h-4 w-4 text-gray-400" />
+              <p className="text-base font-medium uppercase tracking-wider text-black">{metric.label}</p>
+              <Icon name={metric.icon} className="h-4 w-4 text-black" />
             </div>
-            <p className={`mt-3 text-2xl font-bold ${metric.accent}`}>{metric.value}</p>
-            <p className="mt-1 text-xs text-gray-500">{metric.detail}</p>
+            <p className={`mt-3 text-base font-bold ${metric.accent}`}>{metric.value}</p>
+            <p className="mt-1 text-base text-black">{metric.detail}</p>
             <div className="mt-4 h-2 overflow-hidden rounded-full bg-gray-100">
               <div
                 className={`h-full rounded-full ${metric.bar > 90 ? 'bg-red-500' : metric.bar > 75 ? 'bg-amber-500' : 'bg-emerald-500'}`}
@@ -506,10 +598,10 @@ function AccGlobalDashboard() {
         <div className="col-span-2 rounded-xl border border-gray-200 bg-white p-5">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-gray-900">Points de mesure ACC</p>
-              <p className="mt-0.5 text-xs text-gray-500">Statut temps réel des compteurs C1 à C6</p>
+              <p className="text-base font-semibold text-black">Points de mesure ACC</p>
+              <p className="mt-0.5 text-base text-black">Statut temps réel des compteurs C1 à C6</p>
             </div>
-            <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+            <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-base font-semibold text-amber-700">
               2 à surveiller
             </span>
           </div>
@@ -517,13 +609,13 @@ function AccGlobalDashboard() {
             {ACC_POINT_STATUS.map((point) => (
               <div key={point.ref} className="rounded-lg border border-gray-100 bg-gray-50 p-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold text-gray-500">{point.ref}</span>
+                  <span className="font-mono text-base font-bold text-black">{point.ref}</span>
                   <span className={`h-2 w-2 rounded-full ${point.color}`} />
                 </div>
-                <p className="mt-2 text-sm font-semibold text-gray-900">{point.label}</p>
-                <div className="mt-1 flex items-center justify-between text-xs">
-                  <span className="text-gray-500">{point.status}</span>
-                  <span className="font-semibold text-gray-700">{point.value}</span>
+                <p className="mt-2 text-base font-semibold text-black">{point.label}</p>
+                <div className="mt-1 flex items-center justify-between text-base">
+                  <span className="text-black">{point.status}</span>
+                  <span className="font-semibold text-black">{point.value}</span>
                 </div>
               </div>
             ))}
@@ -531,14 +623,14 @@ function AccGlobalDashboard() {
         </div>
 
         <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-sm font-semibold text-gray-900">Répartition usages</p>
-          <p className="mt-0.5 text-xs text-gray-500">Part énergie jour par famille</p>
+          <p className="text-base font-semibold text-black">Répartition usages</p>
+          <p className="mt-0.5 text-base text-black">Part énergie jour par famille</p>
           <div className="mt-5 space-y-4">
             {ACC_LOAD_PROFILE.map((item) => (
               <div key={item.label}>
-                <div className="mb-1 flex items-center justify-between text-xs">
-                  <span className="font-medium text-gray-600">{item.label}</span>
-                  <span className="font-semibold text-gray-900">{item.value} %</span>
+                <div className="mb-1 flex items-center justify-between text-base">
+                  <span className="font-medium text-black">{item.label}</span>
+                  <span className="font-semibold text-black">{item.value} %</span>
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-gray-100">
                   <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.value}%` }} />
@@ -551,29 +643,271 @@ function AccGlobalDashboard() {
 
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-sm font-semibold text-gray-900">Seuils critiques</p>
-          <div className="mt-4 space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-gray-500">Puissance C1+C2</span><span className="font-semibold text-amber-700">72 %</span></div>
-            <div className="flex justify-between"><span className="text-gray-500">Gaz C6 journalier</span><span className="font-semibold text-amber-700">76 %</span></div>
-            <div className="flex justify-between"><span className="text-gray-500">kWh/t cacao</span><span className="font-semibold text-red-700">+3,7</span></div>
+          <p className="text-base font-semibold text-black">Seuils critiques</p>
+          <div className="mt-4 space-y-3 text-base">
+            <div className="flex justify-between"><span className="text-black">Puissance C1+C2</span><span className="font-semibold text-amber-700">72 %</span></div>
+            <div className="flex justify-between"><span className="text-black">Gaz C6 journalier</span><span className="font-semibold text-amber-700">76 %</span></div>
+            <div className="flex justify-between"><span className="text-black">kWh/t cacao</span><span className="font-semibold text-red-700">+3,7</span></div>
           </div>
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-sm font-semibold text-gray-900">Qualité énergie</p>
-          <div className="mt-4 space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-gray-500">cos φ global</span><span className="font-semibold text-emerald-700">0,94</span></div>
-            <div className="flex justify-between"><span className="text-gray-500">THD moyen</span><span className="font-semibold text-emerald-700">3,8 %</span></div>
-            <div className="flex justify-between"><span className="text-gray-500">Disponibilité flux</span><span className="font-semibold text-emerald-700">100 %</span></div>
+          <p className="text-base font-semibold text-black">Qualité énergie</p>
+          <div className="mt-4 space-y-3 text-base">
+            <div className="flex justify-between"><span className="text-black">cos φ global</span><span className="font-semibold text-emerald-700">0,94</span></div>
+            <div className="flex justify-between"><span className="text-black">THD moyen</span><span className="font-semibold text-emerald-700">3,8 %</span></div>
+            <div className="flex justify-between"><span className="text-black">Disponibilité flux</span><span className="font-semibold text-emerald-700">100 %</span></div>
           </div>
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-sm font-semibold text-gray-900">Alertes ACC</p>
-          <div className="mt-4 space-y-3 text-sm">
+          <p className="text-base font-semibold text-black">Alertes ACC</p>
+          <div className="mt-4 space-y-3 text-base">
             <div className="rounded-lg border border-amber-100 bg-amber-50 p-2 text-amber-800">C3 · Usinage +12 % vs profil</div>
             <div className="rounded-lg border border-amber-100 bg-amber-50 p-2 text-amber-800">C6 · Gaz proche seuil journalier</div>
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function IndustrialGlobalDashboard({ site }: { site: SiteConfig }) {
+  const data = INDUSTRIAL_SITE_DATA[site.slug]
+  const dateFilter = useDateFilter()
+
+  return (
+    <div className="space-y-5">
+      <div className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-base text-blue-900">
+        Données agrégées sur la période active : <span className="font-semibold">{dateFilter.label}</span>
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        {data.metrics.map((metric) => (
+          <div key={metric.label} className="rounded-xl border border-gray-200 bg-white p-5">
+            <div className="flex items-center justify-between">
+              <p className="text-base font-medium uppercase tracking-wider text-black">{metric.label}</p>
+              <Icon name={metric.icon} className="h-4 w-4 text-black" />
+            </div>
+            <p className={`mt-3 text-base font-bold ${metric.accent}`}>{metric.value}</p>
+            <p className="mt-1 text-base text-black">{metric.detail}</p>
+            <div className="mt-4 h-2 overflow-hidden rounded-full bg-gray-100">
+              <div
+                className={`h-full rounded-full ${metric.bar > 95 ? 'bg-red-500' : metric.bar > 75 ? 'bg-amber-500' : 'bg-emerald-500'}`}
+                style={{ width: `${Math.min(metric.bar, 100)}%` }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        <div className="col-span-2 rounded-xl border border-gray-200 bg-white p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <p className="text-base font-semibold text-black">Supervision {site.name}</p>
+              <p className="mt-0.5 text-base text-black">Points critiques, utilitÃ©s et dÃ©parts process</p>
+            </div>
+            <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-base font-semibold text-amber-700">
+              {data.points.filter((point) => point.status !== 'OK').length} Ã  surveiller
+            </span>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            {data.points.map((point) => (
+              <div key={point.ref} className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-base font-bold text-black">{point.ref}</span>
+                  <span className={`h-2 w-2 rounded-full ${point.color}`} />
+                </div>
+                <p className="mt-2 text-base font-semibold text-black">{point.label}</p>
+                <div className="mt-1 flex items-center justify-between text-base">
+                  <span className="text-black">{point.status}</span>
+                  <span className="font-semibold text-black">{point.value}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-gray-200 bg-white p-5">
+          <p className="text-base font-semibold text-black">RÃ©partition usages</p>
+          <p className="mt-0.5 text-base text-black">Part Ã©nergie jour par famille</p>
+          <div className="mt-5 space-y-4">
+            {data.profile.map((item) => (
+              <div key={item.label}>
+                <div className="mb-1 flex items-center justify-between text-base">
+                  <span className="font-medium text-black">{item.label}</span>
+                  <span className="font-semibold text-black">{item.value} %</span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-gray-100">
+                  <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.value}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        <div className="rounded-xl border border-gray-200 bg-white p-5">
+          <p className="text-base font-semibold text-black">QualitÃ© rÃ©seau</p>
+          <div className="mt-4 space-y-3 text-base">
+            {data.quality.map((item) => (
+              <div key={item.label} className="flex justify-between">
+                <span className="text-black">{item.label}</span>
+                <span className={`font-semibold ${item.color}`}>{item.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="rounded-xl border border-gray-200 bg-white p-5">
+          <p className="text-base font-semibold text-black">Seuils d&apos;utilisation</p>
+          <div className="mt-4 space-y-3 text-base">
+            <div className="flex justify-between"><span className="text-black">Puissance</span><span className="font-semibold text-amber-700">{data.metrics[0].bar} %</span></div>
+            <div className="flex justify-between"><span className="text-black">Ã‰nergie jour</span><span className="font-semibold text-emerald-700">{data.metrics[1].bar} %</span></div>
+            <div className="flex justify-between"><span className="text-black">{site.slug === 'scci-1' ? 'Carburant' : 'Gaz'}</span><span className="font-semibold text-amber-700">{data.metrics[2].bar} %</span></div>
+          </div>
+        </div>
+        <div className="rounded-xl border border-gray-200 bg-white p-5">
+          <p className="text-base font-semibold text-black">Alertes {site.name}</p>
+          <div className="mt-4 space-y-3 text-base">
+            {data.alerts.map((alert) => (
+              <div key={alert} className="rounded-lg border border-amber-100 bg-amber-50 p-2 text-amber-800">{alert}</div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function IndustrialKpiDashboard({ site }: { site: SiteConfig }) {
+  const data = INDUSTRIAL_SITE_DATA[site.slug]
+  const dateFilter = useDateFilter()
+  const okCount = data.kpis.filter((kpi) => kpi.status === 'ok').length
+
+  return (
+    <div className="space-y-5">
+      <section className="rounded-xl border border-gray-200 bg-white p-5">
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-base font-semibold uppercase tracking-widest text-black">Vue KPI {site.name}</p>
+            <h2 className="mt-2 text-base font-bold text-black">Performance Ã©nergÃ©tique cimenterie</h2>
+            <p className="mt-1 text-base text-black">DonnÃ©es factices croisÃ©es compteurs, ERP production et seuils ISO 50001 Â· {dateFilter.label}.</p>
+          </div>
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-right">
+            <p className="text-base font-semibold uppercase tracking-widest text-emerald-700">KPI tenus</p>
+            <p className="mt-1 text-base font-bold text-emerald-800">{okCount}/{data.kpis.length}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="grid grid-cols-4 gap-4">
+        {data.kpis.map((kpi) => {
+          const statusClass =
+            kpi.status === 'ok' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' :
+            kpi.status === 'watch' ? 'border-amber-200 bg-amber-50 text-amber-700' :
+            'border-red-200 bg-red-50 text-red-700'
+          return (
+            <article key={kpi.label} className="rounded-xl border border-gray-200 bg-white p-5">
+              <div className="flex items-start justify-between gap-3">
+                <p className="text-base font-semibold leading-snug text-black">{kpi.label}</p>
+                <span className={`rounded-full border px-2 py-0.5 text-base font-bold ${statusClass}`}>
+                  {kpi.status === 'ok' ? 'OK' : kpi.status === 'watch' ? 'Surveiller' : 'Alerte'}
+                </span>
+              </div>
+              <p className="mt-5 text-base font-bold text-black">{kpi.value}</p>
+              <div className="mt-2 flex items-center justify-between text-base">
+                <span className="text-black">Objectif {kpi.target}</span>
+                <span className={kpi.status === 'ok' ? 'font-bold text-emerald-700' : 'font-bold text-amber-700'}>{kpi.gap}</span>
+              </div>
+              <div className="mt-4 rounded-lg border border-gray-100 bg-gray-50 p-3">
+                <p className="text-base font-semibold uppercase tracking-widest text-black">Formule</p>
+                <p className="mt-1 text-base leading-relaxed text-black">{kpi.formula}</p>
+              </div>
+            </article>
+          )
+        })}
+      </section>
+    </div>
+  )
+}
+
+function IndustrialZoneDashboard({ site, tab, zone }: { site: SiteConfig; tab: SiteTab; zone: Zone }) {
+  const data = INDUSTRIAL_SITE_DATA[site.slug]
+  const accent = TAG_STYLE[site.name] ?? { bg: '#f3f4f6', text: '#374151' }
+  const dateFilter = useDateFilter()
+
+  return (
+    <div className="space-y-5">
+      <section className="rounded-xl border border-gray-200 bg-white p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <span
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-base font-bold"
+              style={{ background: zone.bgColor, color: zone.textColor }}
+            >
+              {zone.letter}
+            </span>
+            <div>
+              <p className="text-base font-semibold uppercase tracking-widest text-black">{tab.label} Â· {site.name} Â· {dateFilter.label}</p>
+              <h2 className="mt-1 text-base font-bold text-black">{zone.name}</h2>
+            </div>
+          </div>
+          <span className="rounded-full px-2.5 py-1 text-base font-semibold" style={{ background: accent.bg, color: accent.text }}>
+            {site.fullName}
+          </span>
+        </div>
+      </section>
+
+      <section className="grid grid-cols-3 gap-4">
+        {zone.items.slice(0, 6).map((item, index) => (
+          <article key={`${item.text}-${index}`} className="rounded-xl border border-gray-200 bg-white p-4">
+            <div className="flex items-start gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-50 text-black">
+                <Icon name={item.icon} className="h-4 w-4" />
+              </span>
+              <div>
+                <p className="text-base font-semibold leading-snug text-black">{item.text}</p>
+                <p className="mt-2 text-base text-black">
+                  Valeur simulÃ©e: {index % 3 === 0 ? data.metrics[0].value : index % 3 === 1 ? data.metrics[1].value : data.quality[0].value}
+                </p>
+              </div>
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <section className="grid grid-cols-2 gap-4">
+        <div className="rounded-xl border border-gray-200 bg-white p-5">
+          <p className="text-base font-semibold text-black">Points associÃ©s</p>
+          <div className="mt-4 grid grid-cols-2 gap-3">
+            {data.points.slice(0, 4).map((point) => (
+              <div key={point.ref} className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-base font-bold text-black">{point.ref}</span>
+                  <span className={`h-2 w-2 rounded-full ${point.color}`} />
+                </div>
+                <p className="mt-2 text-base font-semibold text-black">{point.label}</p>
+                <p className="mt-1 text-base text-black">{point.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="rounded-xl border border-gray-200 bg-white p-5">
+          <p className="text-base font-semibold text-black">Profil zone</p>
+          <div className="mt-4 space-y-4">
+            {data.profile.map((item) => (
+              <div key={item.label}>
+                <div className="mb-1 flex items-center justify-between text-base">
+                  <span className="font-medium text-black">{item.label}</span>
+                  <span className="font-semibold text-black">{item.value} %</span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-gray-100">
+                  <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.value}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   )
 }
@@ -636,6 +970,7 @@ function getAccKpiGap(kpi: (typeof ACC_KPIS)[number]) {
 const ACC_KPI_TREND = [74, 77, 82, 79, 81, 76, 84, 80, 78, 83, 81, 80.9]
 
 function AccKpiDashboard() {
+  const dateFilter = useDateFilter()
   const kpiScore = Math.round(
     (ACC_KPIS.filter((kpi) => {
       const ratio = kpi.value / kpi.target
@@ -649,15 +984,15 @@ function AccKpiDashboard() {
         <section className="rounded-xl border border-gray-200 bg-white p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">Vue KPI ACC</p>
-              <h2 className="mt-2 text-2xl font-bold text-gray-900">Performance énergétique par tonne produite</h2>
-              <p className="mt-1 text-sm text-gray-500">
-                Données factices calculées à partir des points C1 à C6 et des tonnages ERP.
+              <p className="text-base font-semibold uppercase tracking-widest text-black">Vue KPI ACC</p>
+              <h2 className="mt-2 text-base font-bold text-black">Performance énergétique par tonne produite</h2>
+              <p className="mt-1 text-base text-black">
+                Données factices calculées à partir des points C1 à C6 et des tonnages ERP · {dateFilter.label}.
               </p>
             </div>
             <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-right">
-              <p className="text-xs font-semibold uppercase tracking-widest text-emerald-700">Score KPI</p>
-              <p className="mt-1 text-3xl font-bold text-emerald-800">{kpiScore} %</p>
+              <p className="text-base font-semibold uppercase tracking-widest text-emerald-700">Score KPI</p>
+              <p className="mt-1 text-base font-bold text-emerald-800">{kpiScore} %</p>
             </div>
           </div>
 
@@ -671,11 +1006,11 @@ function AccKpiDashboard() {
             ].map((input) => (
               <div key={input.label} className="rounded-lg border border-gray-100 bg-gray-50 p-3">
                 <div className="flex items-center justify-between">
-                  <Icon name={input.icon} className="h-4 w-4 text-gray-400" />
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Source</span>
+                  <Icon name={input.icon} className="h-4 w-4 text-black" />
+                  <span className="text-base font-semibold uppercase tracking-widest text-black">Source</span>
                 </div>
-                <p className="mt-3 text-lg font-bold text-gray-900">{input.value}</p>
-                <p className="mt-0.5 text-xs text-gray-500">{input.label}</p>
+                <p className="mt-3 text-base font-bold text-black">{input.value}</p>
+                <p className="mt-0.5 text-base text-black">{input.label}</p>
               </div>
             ))}
           </div>
@@ -684,10 +1019,10 @@ function AccKpiDashboard() {
         <section className="rounded-xl border border-gray-200 bg-white p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-gray-900">Tendance kWh/t cacao</p>
-              <p className="mt-0.5 text-xs text-gray-500">12 derniers mois, valeur cible 78 kWh/t</p>
+              <p className="text-base font-semibold text-black">Tendance kWh/t cacao</p>
+              <p className="mt-0.5 text-base text-black">12 derniers mois, valeur cible 78 kWh/t</p>
             </div>
-            <Icon name="chart-line" className="h-4 w-4 text-gray-400" />
+            <Icon name="chart-line" className="h-4 w-4 text-black" />
           </div>
           <div className="mt-6 flex h-36 items-end gap-2 border-b border-gray-200 pb-2">
             {ACC_KPI_TREND.map((value, index) => (
@@ -697,17 +1032,17 @@ function AccKpiDashboard() {
                   style={{ height: `${Math.max(24, (value / 90) * 120)}px` }}
                   title={`${value} kWh/t`}
                 />
-                <span className="text-[10px] text-gray-400">{index + 1}</span>
+                <span className="text-base text-black">{index + 1}</span>
               </div>
             ))}
           </div>
-          <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+          <div className="mt-4 grid grid-cols-2 gap-3 text-base">
             <div className="rounded-lg bg-gray-50 p-3">
-              <p className="text-xs text-gray-500">Moyenne</p>
-              <p className="mt-1 font-bold text-gray-900">79,6 kWh/t</p>
+              <p className="text-base text-black">Moyenne</p>
+              <p className="mt-1 font-bold text-black">79,6 kWh/t</p>
             </div>
             <div className="rounded-lg bg-amber-50 p-3">
-              <p className="text-xs text-amber-700">Dernier mois</p>
+              <p className="text-base text-amber-700">Dernier mois</p>
               <p className="mt-1 font-bold text-amber-800">80,9 kWh/t</p>
             </div>
           </div>
@@ -724,24 +1059,24 @@ function AccKpiDashboard() {
             <article key={kpi.label} className="rounded-xl border border-gray-200 bg-white p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-sm font-semibold leading-snug text-gray-900">{kpi.label}</p>
-                  <p className="mt-1 text-xs text-gray-500">{kpi.detail}</p>
+                  <p className="text-base font-semibold leading-snug text-black">{kpi.label}</p>
+                  <p className="mt-1 text-base text-black">{kpi.detail}</p>
                 </div>
-                <span className={`shrink-0 rounded-full border px-2 py-1 text-[10px] font-bold ${status.bg} ${status.border} ${status.color}`}>
+                <span className={`shrink-0 rounded-full border px-2 py-1 text-base font-bold ${status.bg} ${status.border} ${status.color}`}>
                   {status.label}
                 </span>
               </div>
 
               <div className="mt-5 flex items-end justify-between">
                 <div>
-                  <p className="text-3xl font-bold text-gray-950">{formatAccKpiValue(kpi.value, kpi.unit)}</p>
-                  <p className="mt-1 text-xs text-gray-500">Objectif {formatAccKpiValue(kpi.target, kpi.unit)}</p>
+                  <p className="text-base font-bold text-black">{formatAccKpiValue(kpi.value, kpi.unit)}</p>
+                  <p className="mt-1 text-base text-black">Objectif {formatAccKpiValue(kpi.target, kpi.unit)}</p>
                 </div>
-                <p className={`text-sm font-bold ${gap.color}`}>{gap.text}</p>
+                <p className={`text-base font-bold ${gap.color}`}>{gap.text}</p>
               </div>
 
               <div className="mt-4">
-                <div className="mb-1 flex justify-between text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+                <div className="mb-1 flex justify-between text-base font-semibold uppercase tracking-widest text-black">
                   <span>Réalisé</span>
                   <span>Cible</span>
                 </div>
@@ -751,8 +1086,8 @@ function AccKpiDashboard() {
               </div>
 
               <div className="mt-4 rounded-lg border border-gray-100 bg-gray-50 p-3">
-                <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">Formule</p>
-                <p className="mt-1 text-xs leading-relaxed text-gray-600">{kpi.formula}</p>
+                <p className="text-base font-semibold uppercase tracking-widest text-black">Formule</p>
+                <p className="mt-1 text-base leading-relaxed text-black">{kpi.formula}</p>
               </div>
             </article>
           )
@@ -762,14 +1097,14 @@ function AccKpiDashboard() {
       <section className="rounded-xl border border-gray-200 bg-white p-5">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <p className="text-sm font-semibold text-gray-900">Table de calcul KPI</p>
-            <p className="mt-0.5 text-xs text-gray-500">Traçabilité entre formule, sources et résultat affiché</p>
+            <p className="text-base font-semibold text-black">Table de calcul KPI</p>
+            <p className="mt-0.5 text-base text-black">Traçabilité entre formule, sources et résultat affiché</p>
           </div>
-          <Icon name="table" className="h-4 w-4 text-gray-400" />
+          <Icon name="table" className="h-4 w-4 text-black" />
         </div>
         <div className="overflow-hidden rounded-lg border border-gray-100">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-gray-50 text-xs uppercase tracking-widest text-gray-400">
+          <table className="w-full text-left text-base">
+            <thead className="bg-gray-50 text-base uppercase tracking-widest text-black">
               <tr>
                 <th className="px-4 py-3 font-semibold">KPI</th>
                 <th className="px-4 py-3 font-semibold">Calcul</th>
@@ -780,10 +1115,10 @@ function AccKpiDashboard() {
             <tbody className="divide-y divide-gray-100">
               {ACC_KPIS.map((kpi) => (
                 <tr key={kpi.label} className="bg-white">
-                  <td className="px-4 py-3 font-medium text-gray-900">{kpi.label}</td>
-                  <td className="px-4 py-3 text-gray-500">{kpi.formula}</td>
-                  <td className="px-4 py-3 font-semibold text-gray-900">{formatAccKpiValue(kpi.value, kpi.unit)}</td>
-                  <td className="px-4 py-3 text-gray-500">{formatAccKpiValue(kpi.target, kpi.unit)}</td>
+                  <td className="px-4 py-3 font-medium text-black">{kpi.label}</td>
+                  <td className="px-4 py-3 text-black">{kpi.formula}</td>
+                  <td className="px-4 py-3 font-semibold text-black">{formatAccKpiValue(kpi.value, kpi.unit)}</td>
+                  <td className="px-4 py-3 text-black">{formatAccKpiValue(kpi.target, kpi.unit)}</td>
                 </tr>
               ))}
             </tbody>
@@ -795,6 +1130,7 @@ function AccKpiDashboard() {
 }
 
 function AccPointDetailDashboard({ zone }: { zone: Zone }) {
+  const dateFilter = useDateFilter()
   const meterId = zone.name.match(/C\d/)?.[0] ?? 'C1'
   const meter = ACC_POINT_DETAIL_DATA[meterId] ?? ACC_POINT_DETAIL_DATA.C1
   const watchCount = meter.metrics.filter((metric) => metric.status === 'watch').length
@@ -810,25 +1146,25 @@ function AccPointDetailDashboard({ zone }: { zone: Zone }) {
       <section className="rounded-xl border border-gray-200 bg-white p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">Détail du point de mesure</p>
+            <p className="text-base font-semibold uppercase tracking-widest text-black">Détail du point de mesure · {dateFilter.label}</p>
             <div className="mt-2 flex items-center gap-3">
               <span
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-sm font-bold"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-base font-bold"
                 style={{ background: zone.bgColor, color: zone.textColor }}
               >
                 {meterId}
               </span>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">{meter.label}</h2>
-                <p className="mt-0.5 text-sm text-gray-500">{meter.role}</p>
+                <h2 className="text-base font-bold text-black">{meter.label}</h2>
+                <p className="mt-0.5 text-base text-black">{meter.role}</p>
               </div>
             </div>
           </div>
           <div className="flex gap-2">
-            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-base font-semibold text-emerald-700">
               {meter.metrics.length - watchCount - alertCount} OK
             </span>
-            <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">
+            <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-base font-semibold text-amber-700">
               {watchCount} à surveiller
             </span>
           </div>
@@ -843,17 +1179,17 @@ function AccPointDetailDashboard({ zone }: { zone: Zone }) {
           ].map((item) => (
             <div key={item.label} className="rounded-lg border border-gray-100 bg-gray-50 p-3">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-medium text-gray-500">{item.label}</p>
-                <Icon name={item.icon} className="h-4 w-4 text-gray-400" />
+                <p className="text-base font-medium text-black">{item.label}</p>
+                <Icon name={item.icon} className="h-4 w-4 text-black" />
               </div>
-              <p className="mt-2 text-base font-bold text-gray-900">{item.value}</p>
+              <p className="mt-2 text-base font-bold text-black">{item.value}</p>
             </div>
           ))}
         </div>
       </section>
 
       {meterId === 'C6' && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-base text-amber-800">
           C6 est un compteur gaz: les grandeurs électriques sont conservées dans la grille pour garder la même structure de supervision, mais elles sont marquées non applicables.
         </div>
       )}
@@ -862,15 +1198,15 @@ function AccPointDetailDashboard({ zone }: { zone: Zone }) {
         {meter.metrics.map((metric) => (
           <article key={metric.label} className="rounded-xl border border-gray-200 bg-white p-4">
             <div className="flex items-start justify-between gap-3">
-              <p className="text-sm font-semibold leading-snug text-gray-900">{metric.label}</p>
-              <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${statusStyles[metric.status]}`}>
+              <p className="text-base font-semibold leading-snug text-black">{metric.label}</p>
+              <span className={`rounded-full border px-2 py-0.5 text-base font-bold ${statusStyles[metric.status]}`}>
                 {metric.status === 'ok' ? 'OK' : metric.status === 'watch' ? 'Surveiller' : 'Alerte'}
               </span>
             </div>
-            <p className="mt-4 text-2xl font-bold text-gray-950">{metric.value}</p>
+            <p className="mt-4 text-base font-bold text-black">{metric.value}</p>
             <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
-              <span className="text-xs text-gray-500">Variation</span>
-              <span className={`text-xs font-semibold ${metric.status === 'watch' ? 'text-amber-700' : metric.status === 'alert' ? 'text-red-700' : 'text-emerald-700'}`}>
+              <span className="text-base text-black">Variation</span>
+              <span className={`text-base font-semibold ${metric.status === 'watch' ? 'text-amber-700' : metric.status === 'alert' ? 'text-red-700' : 'text-emerald-700'}`}>
                 {metric.trend}
               </span>
             </div>
@@ -1029,10 +1365,10 @@ function AccSingleLineCanvas() {
       <div className="rounded-xl border border-gray-200 bg-white p-4">
         <div className="mb-3 flex items-center justify-between">
           <div>
-            <p className="text-sm font-semibold text-gray-900">Schéma unifilaire ACC</p>
-            <p className="mt-0.5 text-xs text-gray-500">Arrivée, protections, TGBT 1/2, départs process et points C1 à C6</p>
+            <p className="text-base font-semibold text-black">Schéma unifilaire ACC</p>
+            <p className="mt-0.5 text-base text-black">Arrivée, protections, TGBT 1/2, départs process et points C1 à C6</p>
           </div>
-          <div className="flex items-center gap-3 text-xs text-gray-500">
+          <div className="flex items-center gap-3 text-base text-black">
             <span className="flex items-center gap-1"><span className="h-2 w-2 rounded bg-amber-100 ring-1 ring-amber-300" /> Compteur</span>
             <span className="flex items-center gap-1"><span className="h-2 w-4 rounded bg-gray-900" /> Jeu de barres</span>
             <span className="flex items-center gap-1"><span className="h-2 w-2 rounded bg-white ring-1 ring-gray-300" /> Départ</span>
@@ -1051,30 +1387,30 @@ function AccSingleLineCanvas() {
       </div>
 
       <aside className="rounded-xl border border-gray-200 bg-white p-4">
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">Sélection</p>
-        <h2 className="mt-2 text-base font-semibold text-gray-900">{selectedNode.label}</h2>
-        <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-gray-400">{selectedNode.subtitle}</p>
-        <p className="mt-3 text-sm leading-relaxed text-gray-600">{selectedNode.detail}</p>
+        <p className="text-base font-semibold uppercase tracking-widest text-black">Sélection</p>
+        <h2 className="mt-2 text-base font-semibold text-black">{selectedNode.label}</h2>
+        <p className="mt-1 text-base font-semibold uppercase tracking-widest text-black">{selectedNode.subtitle}</p>
+        <p className="mt-3 text-base leading-relaxed text-black">{selectedNode.detail}</p>
         {selectedNode.meter && (
-          <span className="mt-3 inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-800">
+          <span className="mt-3 inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-base font-semibold text-amber-800">
             Point mesure {selectedNode.meter}
           </span>
         )}
 
         <div className="mt-5">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-400">Architecture</p>
-          <div className="space-y-2 text-sm">
+          <p className="mb-2 text-base font-semibold uppercase tracking-widest text-black">Architecture</p>
+          <div className="space-y-2 text-base">
             <div className="rounded-lg border border-gray-100 bg-gray-50 p-2">
-              <p className="font-semibold text-gray-900">TGBT 1</p>
-              <p className="mt-1 text-xs leading-relaxed text-gray-500">C1 couvre C3, C4, C5 et les autres départs ancien TGBT.</p>
+              <p className="font-semibold text-black">TGBT 1</p>
+              <p className="mt-1 text-base leading-relaxed text-black">C1 couvre C3, C4, C5 et les autres départs ancien TGBT.</p>
             </div>
             <div className="rounded-lg border border-gray-100 bg-gray-50 p-2">
-              <p className="font-semibold text-gray-900">TGBT 2</p>
-              <p className="mt-1 text-xs leading-relaxed text-gray-500">C2 couvre les broyeurs, froid, UPS, compresseurs 2 et GE J.</p>
+              <p className="font-semibold text-black">TGBT 2</p>
+              <p className="mt-1 text-base leading-relaxed text-black">C2 couvre les broyeurs, froid, UPS, compresseurs 2 et GE J.</p>
             </div>
             <div className="rounded-lg border border-gray-100 bg-gray-50 p-2">
-              <p className="font-semibold text-gray-900">Séchoir</p>
-              <p className="mt-1 text-xs leading-relaxed text-gray-500">C4 mesure l’énergie électrique, C6 mesure l’arrivée gaz.</p>
+              <p className="font-semibold text-black">Séchoir</p>
+              <p className="mt-1 text-base leading-relaxed text-black">C4 mesure l’énergie électrique, C6 mesure l’arrivée gaz.</p>
             </div>
           </div>
         </div>
@@ -1217,10 +1553,10 @@ function AccMassPlanCanvas() {
       <div className="rounded-xl border border-gray-200 bg-white p-4">
         <div className="mb-3 flex items-center justify-between">
           <div>
-            <p className="text-sm font-semibold text-gray-900">Plan de masse ACC</p>
-            <p className="mt-0.5 text-xs text-gray-500">Zones process, utilités et points de mesure C1 à C6</p>
+            <p className="text-base font-semibold text-black">Plan de masse ACC</p>
+            <p className="mt-0.5 text-base text-black">Zones process, utilités et points de mesure C1 à C6</p>
           </div>
-          <div className="flex items-center gap-3 text-xs text-gray-500">
+          <div className="flex items-center gap-3 text-base text-black">
             <span className="flex items-center gap-1"><span className="h-2 w-2 rounded bg-white ring-1 ring-gray-300" /> Bâtiment</span>
             <span className="flex items-center gap-1"><span className="h-2 w-2 rounded bg-orange-50 ring-1 ring-orange-300" /> Utilité</span>
             <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-gray-900" /> Compteur</span>
@@ -1239,25 +1575,25 @@ function AccMassPlanCanvas() {
       </div>
 
       <aside className="rounded-xl border border-gray-200 bg-white p-4">
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400">Sélection</p>
-        <h2 className="mt-2 text-base font-semibold text-gray-900">{selectedFeature.label}</h2>
-        <p className="mt-2 text-sm leading-relaxed text-gray-600">{selectedFeature.detail}</p>
+        <p className="text-base font-semibold uppercase tracking-widest text-black">Sélection</p>
+        <h2 className="mt-2 text-base font-semibold text-black">{selectedFeature.label}</h2>
+        <p className="mt-2 text-base leading-relaxed text-black">{selectedFeature.detail}</p>
         {selectedFeature.meter && (
-          <span className="mt-3 inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-800">
+          <span className="mt-3 inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-base font-semibold text-amber-800">
             Point mesure {selectedFeature.meter}
           </span>
         )}
 
         <div className="mt-5">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-gray-400">Compteurs</p>
+          <p className="mb-2 text-base font-semibold uppercase tracking-widest text-black">Compteurs</p>
           <div className="space-y-2">
             {ACC_METER_POINTS.map((meter) => (
               <div key={meter.id} className="rounded-lg border border-gray-100 bg-gray-50 p-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-bold text-gray-900">{meter.id}</span>
-                  <span className="text-xs font-medium text-gray-600">{meter.label}</span>
+                  <span className="font-mono text-base font-bold text-black">{meter.id}</span>
+                  <span className="text-base font-medium text-black">{meter.label}</span>
                 </div>
-                <p className="mt-1 text-[11px] leading-snug text-gray-500">{meter.detail}</p>
+                <p className="mt-1 text-base leading-snug text-black">{meter.detail}</p>
               </div>
             ))}
           </div>
@@ -1267,8 +1603,101 @@ function AccMassPlanCanvas() {
   )
 }
 
+function productionTabForSite(site: SiteConfig): SiteTab {
+  const base =
+    site.slug === 'acc'
+      ? {
+          title: 'Production cacao',
+          source: 'ERP production ACC',
+          zoneA: 'Tonnages cacao',
+          zoneB: 'Séchage & usinage',
+          items: [
+            { icon: 'hash', text: 'Tonnage cacao traité : 110,3 t sur la journée', tag: 'ACC' },
+            { icon: 'sun', text: 'Tonnage séché ERP : 47,8 t · rendement séchoir 92 %' },
+            { icon: 'tools', text: 'Tonnage usinage ERP : 54,2 t · suivi atelier C3' },
+            { icon: 'chart-line', text: 'Courbe production horaire et comparaison énergie C1+C2', full: true },
+          ],
+          quality: [
+            { icon: 'percentage', text: 'Rendement matière : 94,1 %' },
+            { icon: 'target', text: 'Objectif journalier : 125 t cacao traité' },
+          ],
+        }
+      : site.slug === 'scci-1'
+        ? {
+            title: 'Production ciment SCCI 1',
+            source: 'ERP cimenterie · Ligne 1',
+            zoneA: 'Tonnage clinker / ciment',
+            zoneB: 'Expédition & ensachage',
+            items: [
+              { icon: 'hash', text: 'Tonnage ciment produit : 466 t sur la journée', tag: 'SCCI 1' },
+              { icon: 'engine', text: 'Broyage / HTA : 12,6 MWh corrélés à la production' },
+              { icon: 'truck', text: 'Ensachage / Expédition C3 : 438 t expédiées' },
+              { icon: 'chart-line', text: 'Courbe production horaire vs puissance C1+C2', full: true },
+            ],
+            quality: [
+              { icon: 'percentage', text: 'Disponibilité ligne : 91,8 %' },
+              { icon: 'target', text: 'Objectif journalier : 510 t ciment' },
+            ],
+          }
+        : {
+            title: 'Production ciment SCCI 2',
+            source: 'ERP cimenterie · Ligne 2',
+            zoneA: 'Tonnage ciment',
+            zoneB: 'Expédition & utilités',
+            items: [
+              { icon: 'hash', text: 'Tonnage ciment produit : 452 t sur la journée', tag: 'SCCI 2' },
+              { icon: 'truck', text: 'Expédition C3+C4 : 451 t expédiées' },
+              { icon: 'wind', text: 'Compresseurs C6 : 4,4 MWh associés au process' },
+              { icon: 'chart-line', text: 'Courbe production horaire vs puissance C1', full: true },
+            ],
+            quality: [
+              { icon: 'percentage', text: 'Disponibilité ligne : 94,6 %' },
+              { icon: 'target', text: 'Objectif journalier : 475 t ciment' },
+            ],
+          }
+
+  return {
+    id: 'production-data',
+    label: 'Données de production',
+    icon: 'table',
+    zones: [
+      {
+        letter: 'A',
+        bgColor: site.accent === 'blue' ? '#E6F1FB' : site.accent === 'emerald' ? '#E1F5EE' : '#FAEEDA',
+        textColor: site.accent === 'blue' ? '#0C447C' : site.accent === 'emerald' ? '#085041' : '#8B5500',
+        name: base.zoneA,
+        source: base.source,
+        items: base.items,
+      },
+      {
+        letter: 'B',
+        bgColor: '#EAF3DE',
+        textColor: '#27500A',
+        name: base.zoneB,
+        source: base.title,
+        items: base.quality,
+      },
+    ],
+    widgets: [
+      { label: 'Production', type: 'ERP journalier', icon: 'hash' },
+      { label: 'Objectif', type: 'Réalisé vs cible', icon: 'target' },
+      { label: 'Corrélation', type: 'kWh vs tonnes', icon: 'chart-line' },
+      { label: 'Qualité', type: 'Rendement', icon: 'percentage' },
+    ],
+  }
+}
+
 function visibleTabsForSite(site: SiteConfig): SiteTab[] {
-  if (site.slug !== 'acc') return site.tabs
+  const production = productionTabForSite(site)
+
+  if (site.slug !== 'acc') {
+    const tabsWithProduction = [...site.tabs]
+    const kpiIndex = tabsWithProduction.findIndex((tab) => tab.id === 'kpis')
+    const detailIndex = tabsWithProduction.findIndex((tab) => tab.id === 'detail-points')
+    const insertIndex = detailIndex >= 0 ? detailIndex : kpiIndex >= 0 ? kpiIndex + 1 : 1
+    tabsWithProduction.splice(insertIndex, 0, production)
+    return tabsWithProduction
+  }
 
   const vueGlobale = site.tabs.find((tab) => tab.id === 'bilan')
   const detailParPointBase = site.tabs.find((tab) => tab.id === 'detail-points')
@@ -1328,12 +1757,13 @@ function visibleTabsForSite(site: SiteConfig): SiteTab[] {
     ],
   }
 
-  return [vueGlobale, detailParPoint, kpi, carte].filter((tab): tab is SiteTab => Boolean(tab))
+  return [vueGlobale, kpi, production, detailParPoint, carte].filter((tab): tab is SiteTab => Boolean(tab))
 }
 
 export default function SiteView({ site }: { site: SiteConfig }) {
   const [activeTabIdx, setActiveTabIdx] = useState(0)
   const [activeZoneIdx, setActiveZoneIdx] = useState(0)
+  const dateFilter = useDateFilter()
 
   const accentCfg = ACCENT[site.accent]
   const tabs = visibleTabsForSite(site)
@@ -1344,7 +1774,10 @@ export default function SiteView({ site }: { site: SiteConfig }) {
   const isAccPointDetail = site.slug === 'acc' && tab.id === 'detail-points'
   const isAccSingleLine = isAccPointDetail && zone.name === 'Schéma unifilaire ACC'
   const isAccMassPlan = site.slug === 'acc' && tab.id === 'carte'
-  const isAccFullScreenView = isAccGlobalDashboard || isAccKpiDashboard || isAccMassPlan
+  const isIndustrialSite = site.slug === 'scci-1' || site.slug === 'scci-2'
+  const isIndustrialGlobalDashboard = isIndustrialSite && tab.id === 'bilan'
+  const isIndustrialKpiDashboard = isIndustrialSite && tab.id === 'kpis'
+  const isFullScreenView = isAccGlobalDashboard || isAccKpiDashboard || isAccMassPlan || isIndustrialGlobalDashboard || isIndustrialKpiDashboard
 
   function switchTab(i: number) {
     setActiveTabIdx(i)
@@ -1358,8 +1791,8 @@ export default function SiteView({ site }: { site: SiteConfig }) {
       <div className="shrink-0 flex items-center gap-3 px-6 pt-5 pb-3">
         <div className={`h-2.5 w-2.5 rounded-full ${accentCfg.dot}`} />
         <div>
-          <h1 className="text-lg font-semibold text-gray-900 leading-none">{site.fullName}</h1>
-          <p className="mt-1 text-sm font-medium text-gray-700">{site.name}</p>
+          <h1 className="text-base font-semibold text-black leading-none">{site.fullName}</h1>
+          <p className="mt-1 text-base font-medium text-black">{site.name} · Période : {dateFilter.label}</p>
         </div>
       </div>
 
@@ -1371,10 +1804,10 @@ export default function SiteView({ site }: { site: SiteConfig }) {
             <button
               key={t.id}
               onClick={() => switchTab(i)}
-              className={`flex items-center gap-1.5 whitespace-nowrap border-b-2 px-4 py-2.5 text-sm transition-colors ${
+              className={`flex items-center gap-1.5 whitespace-nowrap border-b-2 px-4 py-2.5 text-base transition-colors ${
                 isActive
                   ? `${accentCfg.tabBorder} ${accentCfg.tabActive}`
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  : 'border-transparent text-black hover:text-black'
               }`}
             >
               <Icon name={t.icon} className="h-3.5 w-3.5 shrink-0" />
@@ -1389,16 +1822,26 @@ export default function SiteView({ site }: { site: SiteConfig }) {
 
       {/* ── Content: sidebar + main ──────────────────────────────────────── */}
       <div className="flex flex-1 overflow-hidden">
-        {isAccFullScreenView ? (
+        {isFullScreenView ? (
           <main className="flex-1 overflow-y-auto p-6">
-            {isAccMassPlan ? <AccMassPlanCanvas /> : isAccKpiDashboard ? <AccKpiDashboard /> : <AccGlobalDashboard />}
+            {isAccMassPlan ? (
+              <AccMassPlanCanvas />
+            ) : isAccKpiDashboard ? (
+              <AccKpiDashboard />
+            ) : isAccGlobalDashboard ? (
+              <AccGlobalDashboard />
+            ) : isIndustrialKpiDashboard ? (
+              <IndustrialKpiDashboard site={site} />
+            ) : (
+              <IndustrialGlobalDashboard site={site} />
+            )}
           </main>
         ) : (
           <>
 
         {/* Sidebar — zones of active tab */}
         <aside className="w-56 shrink-0 overflow-y-auto border-r border-gray-200 bg-white py-3 px-2">
-          <p className="px-2 mb-2 text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+          <p className="px-2 mb-2 text-base font-semibold uppercase tracking-widest text-black">
             {tab.label}
           </p>
           <ul className="space-y-0.5">
@@ -1411,16 +1854,16 @@ export default function SiteView({ site }: { site: SiteConfig }) {
                     className={`group w-full flex items-center gap-2 rounded-lg px-2 py-2 text-left transition-colors ${
                       isActive
                         ? accentCfg.sidebarActive
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        : 'text-black hover:bg-gray-50 hover:text-black'
                     }`}
                   >
                     <span
-                      className="h-5 w-5 shrink-0 rounded flex items-center justify-center text-[10px] font-bold"
+                      className="h-5 w-5 shrink-0 rounded flex items-center justify-center text-base font-bold"
                       style={{ background: z.bgColor, color: z.textColor }}
                     >
                       {z.letter}
                     </span>
-                    <span className="flex-1 truncate text-xs leading-tight">{z.name}</span>
+                    <span className="flex-1 truncate text-base leading-tight">{z.name}</span>
                   </button>
                 </li>
               )
@@ -1435,6 +1878,8 @@ export default function SiteView({ site }: { site: SiteConfig }) {
             <AccSingleLineCanvas />
           ) : isAccPointDetail ? (
             <AccPointDetailDashboard zone={zone} />
+          ) : isIndustrialSite ? (
+            <IndustrialZoneDashboard site={site} tab={tab} zone={zone} />
           ) : (
             <ZonePanel zone={zone} />
           )}

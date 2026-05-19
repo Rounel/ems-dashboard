@@ -10,7 +10,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-150 text-sm"
+      className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-150 text-base"
     >
       {pending ? 'Connexion…' : 'Se connecter'}
     </button>
@@ -33,23 +33,23 @@ export default function LoginPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </div>
-          <h1 className="text-xl font-bold text-gray-900 tracking-tight">EMS Dashboard</h1>
-          <p className="text-gray-500 text-sm mt-1">Supervision des sites industriels</p>
+          <h1 className="text-base font-bold text-black tracking-tight">Atlantic Group Supervisor</h1>
+          <p className="text-black text-base mt-1">Supervision des sites industriels</p>
         </div>
 
         {/* Card */}
         <div className="bg-white border border-gray-200 rounded-2xl p-7 shadow-sm">
-          <h2 className="text-base font-semibold text-gray-900 mb-5">Connexion</h2>
+          <h2 className="text-base font-semibold text-black mb-5">Connexion</h2>
 
           {state?.error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg mb-5">
+            <div className="bg-red-50 border border-red-200 text-red-700 text-base px-4 py-3 rounded-lg mb-5">
               {state.error}
             </div>
           )}
 
           <form action={formAction} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-xs font-medium text-gray-600 mb-1.5">
+              <label htmlFor="email" className="block text-base font-medium text-black mb-1.5">
                 Adresse e-mail
               </label>
               <input
@@ -58,13 +58,13 @@ export default function LoginPage() {
                 type="email"
                 autoComplete="email"
                 required
-                className="w-full bg-white border border-gray-300 text-gray-900 placeholder-gray-400 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full bg-white border border-gray-300 text-black placeholder-gray-400 rounded-lg px-3.5 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 placeholder="admin@ems.local"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-xs font-medium text-gray-600 mb-1.5">
+              <label htmlFor="password" className="block text-base font-medium text-black mb-1.5">
                 Mot de passe
               </label>
               <input
@@ -73,7 +73,7 @@ export default function LoginPage() {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="w-full bg-white border border-gray-300 text-gray-900 placeholder-gray-400 rounded-lg px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full bg-white border border-gray-300 text-black placeholder-gray-400 rounded-lg px-3.5 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                 placeholder="••••••••"
               />
             </div>
@@ -84,7 +84,7 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <p className="text-center text-gray-400 text-xs mt-6">
+        <p className="text-center text-black text-base mt-6">
           Accès réservé au personnel autorisé
         </p>
       </div>

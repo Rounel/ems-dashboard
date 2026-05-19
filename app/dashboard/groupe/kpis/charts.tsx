@@ -22,11 +22,11 @@ type LightTooltipProps = {
 function LightTooltip({ active, payload, label }: LightTooltipProps) {
   if (!active || !payload?.length) return null
   return (
-    <div className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs shadow-lg">
-      {label && <p className="mb-1 text-gray-500">{label}</p>}
+    <div className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-base shadow-lg">
+      {label && <p className="mb-1 text-black">{label}</p>}
       {payload.map((p, i) => (
         <p key={i} style={{ color: p.color }}>
-          {p.name}: <span className="font-semibold text-gray-900">{p.value}</span>
+          {p.name}: <span className="font-semibold text-black">{p.value}</span>
         </p>
       ))}
     </div>
@@ -50,7 +50,7 @@ export function KpiLineChart({
 }: KpiLineChartProps) {
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-5">
-      <p className="mb-4 text-sm font-semibold text-gray-700">{title}</p>
+      <p className="mb-4 text-base font-semibold text-black">{title}</p>
       <ResponsiveContainer width="100%" height={240}>
         <LineChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.grid} vertical={false} />
