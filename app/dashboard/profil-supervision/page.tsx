@@ -343,7 +343,7 @@ export default function ProfilSupervisionPage() {
 
       <div className="grid grid-cols-4 gap-4">
         {[
-          { label: 'Règles configurées', value: rules.length, tone: 'text-blue-700' },
+          { label: 'Règles configurées', value: rules.length, tone: 'text-primary' },
           { label: 'Règles actives', value: activeRules, tone: 'text-emerald-700' },
           { label: 'Règles ACC', value: accRules, tone: 'text-amber-700' },
           { label: 'Règles SCCI 1 / 2', value: scciRules, tone: 'text-sky-700' },
@@ -438,7 +438,7 @@ export default function ProfilSupervisionPage() {
             </label>
 
             <div className="rounded-lg border border-blue-100 bg-blue-50 p-3">
-              <p className="text-base font-semibold uppercase tracking-widest text-blue-700">Prévisualisation</p>
+              <p className="text-base font-semibold uppercase tracking-widest text-primary">Prévisualisation</p>
               <p className="mt-2 text-base leading-relaxed text-blue-900">
                 {selectedSite} · {selectedEquipment} · {selectedMetric}: warning {formatThreshold(toNumber(warningMin), toNumber(warningMax), selectedMetricUnit)}, alarme {formatThreshold(toNumber(alarmMin), toNumber(alarmMax), selectedMetricUnit)}.
               </p>
@@ -459,7 +459,7 @@ export default function ProfilSupervisionPage() {
                   type="button"
                   onClick={() => setSelectedSite(site)}
                   className={`rounded-md px-3 py-1.5 text-base font-semibold transition-colors ${
-                    selectedSite === site ? 'bg-white text-blue-700 shadow-sm' : 'text-black hover:text-black'
+                    selectedSite === site ? 'bg-white text-primary shadow-sm' : 'text-black hover:text-black'
                   }`}
                 >
                   {site}
@@ -508,7 +508,7 @@ export default function ProfilSupervisionPage() {
                       <button
                         type="button"
                         onClick={() => loadRule(rule)}
-                        className="text-base font-semibold text-blue-600 transition-colors hover:text-blue-700"
+                        className="text-base font-semibold text-blue-600 transition-colors hover:text-primary"
                       >
                         Modifier
                       </button>

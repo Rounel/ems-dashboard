@@ -77,7 +77,7 @@ export default function RapportsPage() {
                   <td className="px-5 py-3 text-base text-black">{r.generatedBy}</td>
                   <td className="px-5 py-3 text-base text-black">{r.size}</td>
                   <td className="px-5 py-3">
-                    <button className="text-base text-blue-600 hover:text-blue-700 transition-colors">
+                    <button className="text-base text-blue-600 hover:text-primary transition-colors">
                       Télécharger
                     </button>
                   </td>

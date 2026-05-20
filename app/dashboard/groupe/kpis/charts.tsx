@@ -74,7 +74,7 @@ export function KpiLineChart({
           {lines.map((l) => (
             <Line
               key={l.key}
-              type="monotone"
+              type="linear"
               dataKey={l.key}
               name={l.label}
               stroke={l.color}

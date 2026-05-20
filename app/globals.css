@@ -10,62 +10,15 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-primary: #156097;
+  --color-secondary: #19a451;
+  --color-accent1: #174263;
+  --color-accent2: #15522f;
+  --color-accent3: #242424;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-}
-
-html {
-  font-size: 17px;
-}
-
-.text-\[10px\],
-.text-\[11px\] {
-  font-size: 0.75rem !important;
-  line-height: 1rem !important;
-}
-
-.text-xs {
-  font-size: 0.875rem !important;
-  line-height: 1.25rem !important;
-}
-
-.text-sm {
-  font-size: 1rem !important;
-  line-height: 1.5rem !important;
-}
-
-.text-base {
-  font-size: 1.0625rem !important;
-  line-height: 1.625rem !important;
-}
-
-.text-lg {
-  font-size: 1.25rem !important;
-  line-height: 1.75rem !important;
-}
-
-.text-gray-400,
-.text-gray-500 {
-  color: #ffffff !important;
-}
-
-.text-gray-600,
-.text-gray-700,
-.text-gray-800,
-.text-gray-900,
-.text-gray-950 {
-  color: #000000 !important;
-}
-
-.bg-white .text-gray-400,
-.bg-white .text-gray-500,
-.bg-gray-50 .text-gray-400,
-.bg-gray-50 .text-gray-500,
-.bg-gray-100 .text-gray-400,
-.bg-gray-100 .text-gray-500 {
-  color: #000000 !important;
 }

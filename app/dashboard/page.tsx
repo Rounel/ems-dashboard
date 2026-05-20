@@ -80,7 +80,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-xl border border-gray-200 bg-white p-5">
           <p className="text-base font-medium uppercase tracking-wider text-black">Sites</p>
-          <p className="mt-2 text-base lg:text-base font-bold">
+          <p className="mt-2 text-base lg:text-3xl font-bold">
             {SITES.length}
           </p>
           <p className="mt-1 text-base text-black">
@@ -89,12 +89,12 @@ export default function DashboardPage() {
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-5">
           <p className="text-base font-medium uppercase tracking-wider text-black">Points de mesure</p>
-          <p className="mt-2 text-base lg:text-base font-bold">26</p>
+          <p className="mt-2 text-base lg:text-3xl font-bold">26</p>
           <p className="mt-1 text-base text-black">Somme des 3 sites</p>
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-5">
           <p className="text-base font-medium uppercase tracking-wider text-black">Alertes actives</p>
-          <p className={`mt-2 text-base lg:text-base font-bold ${activeAlerts > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>
+          <p className={`mt-2 text-base lg:text-3xl font-bold ${activeAlerts > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>
             {activeAlerts}
           </p>
           <p className="mt-1 text-base text-black">{ALERTS.length} alertes sur 30 jours</p>
@@ -120,7 +120,7 @@ export default function DashboardPage() {
                 <div className="flex justify-between items-end">
                   <div className="">
                     <p className="text-base md:text-base lg:text-base font-medium text-black">Total</p>
-                    <p className={`text-base lg:text-base font-bold text-black`}>
+                    <p className={`text-base lg:text-4xl font-bold text-black`}>
                       {formatNumber(total)} {block.unit}
                     </p>
                   </div>
@@ -149,9 +149,9 @@ export default function DashboardPage() {
                   <div key={item.site} className="flex items-center justify-between text-base bg-gray-500/10 rounded-lg p-2">
                     <div className="flex gap-4 items-center">
                       <Factory className="size-6 text-black" />
-                      <span className="text-base md:text-base lg:text-base font-medium text-black">{item.site}</span>
+                      <span className="text-base md:text-base lg:text-lg font-medium text-black">{item.site}</span>
                     </div>
-                    <span className="text-base md:text-base lg:text-base font-semibold text-black">
+                    <span className="text-base md:text-base lg:text-xl font-semibold text-black">
                       {formatNumber(item.value)} {block.unit}
                     </span>
                   </div>

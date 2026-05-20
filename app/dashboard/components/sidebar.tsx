@@ -115,16 +115,16 @@ export default function Sidebar() {
     item.exact ? pathname === item.href : pathname.startsWith(item.href)
 
   return (
-    <aside className="w-64 shrink-0 flex flex-col bg-white border-r border-gray-200 overflow-y-auto">
+    <aside className="w-68 shrink-0 flex flex-col bg-linear-to-br from-[#156097] via-[#174263] to-[#0f2a42] border-r border-gray-200 overflow-y-auto">
 
       {/* Brand */}
       <div className="h-14 shrink-0 flex items-center gap-2.5 px-4 border-b border-gray-200">
         <div className="w-7 h-7 shrink-0 rounded-lg flex items-center justify-center">
-          <Image src="/logo_ag.jpg" alt="Atlantic Group" width={28} height={28} />
+          <Image src="/logo_ag.jpg" alt="Atlantic Group" width={28} height={28} style={{ width: 28, height: 'auto' }} />
         </div>
         <div className="min-w-0 leading-none">
-          <p className="text-base font-semibold text-black">Atlantic Group Supervisor</p>
-          <p className="text-base text-black mt-0.5">Backoffice</p>
+          <p className="text-base font-semibold text-white">Atlantic Group</p>
+          <p className="text-base text-white mt-0.5">Supervisor</p>
         </div>
       </div>
 
@@ -132,7 +132,7 @@ export default function Sidebar() {
       <nav className="flex-1 px-2 py-4 space-y-5">
         {NAV.map((section) => (
           <div key={section.label}>
-            <p className="px-2 mb-1 text-base font-semibold uppercase tracking-widest text-black">
+            <p className="px-2 mb-1 text-sm font-semibold uppercase tracking-widest text-white">
               {section.label}
             </p>
             <ul className="space-y-0.5">
@@ -144,11 +144,11 @@ export default function Sidebar() {
                       href={item.href}
                       className={`group flex items-center gap-2.5 rounded-lg px-2 py-[7px] text-base transition-colors duration-100 ${
                         on
-                          ? 'bg-blue-50 text-blue-700'
-                          : 'text-black hover:bg-gray-50 hover:text-black'
+                          ? 'bg-blue-50 text-primary'
+                          : 'text-gray-300 hover:bg-gray-50/10 hover:text-white'
                       }`}
                     >
-                      <span className={`shrink-0 transition-colors ${on ? 'text-blue-600' : 'text-black group-hover:text-black'}`}>
+                      <span className={`shrink-0 transition-colors ${on ? 'text-primary' : 'text-gray-300 group-hover:text-white'}`}>
                         {item.icon}
                       </span>
 
@@ -173,7 +173,7 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="shrink-0 border-t border-gray-200 px-4 py-3">
-        <p className="text-base text-black">v0.1.0 · Atlantic Group Supervisor</p>
+        <p className="text-xs text-white">v0.1.0 · Atlantic Group Supervisor</p>
       </div>
     </aside>
   )

@@ -97,7 +97,7 @@ export function IsoAnnualChart({ data }: { data: IsoAnnualPoint[] }) {
           <Tooltip content={<LightTooltip />} cursor={{ stroke: CHART_COLORS.grid }} />
           <Legend wrapperStyle={{ fontSize: 11, color: CHART_COLORS.tick, paddingTop: 12 }} iconType="circle" iconSize={8} />
           <Line
-            type="monotone"
+            type="linear"
             dataKey="objectif"
             name="Objectif"
             stroke={CHART_COLORS.objectif}
@@ -106,7 +106,7 @@ export function IsoAnnualChart({ data }: { data: IsoAnnualPoint[] }) {
             dot={false}
           />
           <Line
-            type="monotone"
+            type="linear"
             dataKey="realise"
             name="Réalisé"
             stroke={CHART_COLORS.cie}

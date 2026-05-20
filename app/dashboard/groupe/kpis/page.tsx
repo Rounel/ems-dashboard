@@ -51,9 +51,9 @@ export default function KpisPage() {
             key={tab}
             type="button"
             onClick={() => setActiveTab(tab)}
-            className={`rounded-lg px-4 py-2 text-base font-semibold transition-colors ${
+            className={`rounded-lg px-4 py-2 text-base font-semibold transition-colors cursor-pointer ${
               activeTab === tab
-                ? 'bg-blue-50 text-blue-700'
+                ? 'bg-blue-50 text-primary'
                 : 'text-black hover:bg-gray-50 hover:text-black'
             }`}
           >
@@ -76,10 +76,13 @@ export default function KpisPage() {
               return (
                 <div key={label} className="rounded-xl border border-gray-200 bg-white p-4">
                   <p className="text-base font-medium uppercase tracking-wider text-black">{label}</p>
-                  <p className={`mt-2 text-base font-bold ${good ? 'text-emerald-600' : 'text-red-600'}`}>{v.toFixed(1)}</p>
-                  <p className="mt-0.5 text-base text-black">Objectif {obj} {unit}</p>
-                  <div className="mt-1">
-                    <Delta v={v} obj={obj} unit={unit} />
+                  <p className={`mt-2 text-base md:text-lg lg:text-4xl font-bold ${good ? 'text-emerald-600' : 'text-red-600'}`}>{v.toFixed(1)}</p>
+                  <div className="h-0.5 my-1 w-full bg-gray-300"></div>
+                  <div className="flex justify-between">
+                    <p className="mt-0.5 text-base text-black">Objectif &lt; {obj} {unit}</p>
+                    <div className="mt-1">
+                      <Delta v={v} obj={obj} unit={unit} />
+                    </div>
                   </div>
                 </div>
               )
@@ -171,7 +174,7 @@ export default function KpisPage() {
                 <p className="text-base font-semibold text-black">{row.site}</p>
                 <span className="h-2 w-2 rounded-full bg-emerald-500" />
               </div>
-              <p className="mt-4 text-base font-bold text-black">{row.power}</p>
+              <p className="mt-4 text-base md:text-lg lg:text-2xl font-bold text-black">{row.power}</p>
               <p className="mt-1 text-base text-black">{row.quality}</p>
               <div className="mt-4">
                 <div className="mb-1 flex justify-between text-base">

@@ -2,7 +2,7 @@ import { GRAFANA_USERS, ALERT_THRESHOLDS } from '@/app/lib/mock-data'
 import SectionHeader from '@/app/dashboard/components/section-header'
 
 const ROLE_BADGE: Record<string, string> = {
-  'Administrateur': 'bg-blue-50 text-blue-700 border border-blue-200',
+  'Administrateur': 'bg-blue-50 text-primary border border-blue-200',
   'Éditeur':        'bg-indigo-50 text-indigo-700 border border-indigo-200',
   'Lecteur':        'bg-gray-100 text-black border border-gray-200',
 }
@@ -61,7 +61,7 @@ export default function AccesPage() {
                     </span>
                   </td>
                   <td className="px-5 py-3">
-                    <button className="text-base text-blue-600 hover:text-blue-700 transition-colors">Modifier</button>
+                    <button className="text-base text-blue-600 hover:text-primary transition-colors">Modifier</button>
                   </td>
                 </tr>
               ))}
@@ -98,7 +98,7 @@ export default function AccesPage() {
                     <span className="font-mono text-red-600">{t.critical}</span>
                   </td>
                   <td className="px-5 py-3">
-                    <button className="text-base text-blue-600 hover:text-blue-700 transition-colors">Modifier</button>
+                    <button className="text-base text-blue-600 hover:text-primary transition-colors">Modifier</button>
                   </td>
                 </tr>
               ))}

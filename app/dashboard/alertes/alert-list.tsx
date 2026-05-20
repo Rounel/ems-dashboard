@@ -9,7 +9,7 @@ import { acknowledgeAlert } from '@/app/actions/alertes'
 const LEVEL_CFG: Record<AlertLevel, { dot: string; badge: string; label: string }> = {
   critique: { dot: 'bg-red-500',   badge: 'bg-red-50 text-red-700 border border-red-200',     label: 'Critique' },
   warning:  { dot: 'bg-amber-400', badge: 'bg-amber-50 text-amber-700 border border-amber-200', label: 'Warning' },
-  info:     { dot: 'bg-blue-500',  badge: 'bg-blue-50 text-blue-700 border border-blue-200',   label: 'Info' },
+  info:     { dot: 'bg-blue-500',  badge: 'bg-blue-50 text-primary border border-blue-200',   label: 'Info' },
 }
 
 // ── Section table ─────────────────────────────────────────────────────────────

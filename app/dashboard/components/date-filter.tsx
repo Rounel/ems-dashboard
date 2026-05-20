@@ -113,9 +113,9 @@ export function DateFilterControl() {
           key={preset}
           type="button"
           onClick={() => dateFilter.setPreset(preset as DatePreset)}
-          className={`rounded-md px-2.5 py-1.5 text-base font-semibold transition-colors ${
+          className={`rounded-md px-2.5 py-1.5 text-base font-semibold transition-colors cursor-pointer ${
             dateFilter.preset === preset
-              ? 'bg-white text-blue-700 shadow-sm'
+              ? 'bg-white text-primary shadow-sm'
               : 'text-black hover:text-black'
           }`}
         >

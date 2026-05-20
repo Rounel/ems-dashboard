@@ -31,10 +31,10 @@ export default function MixEnergetiqueePage() {
           </div>
         ))}
         <div className="rounded-xl border border-blue-200 bg-blue-50 p-5">
-          <p className="text-base font-medium uppercase tracking-wider text-blue-700">Total Groupe</p>
-          <p className="mt-2 text-base font-bold text-blue-700">{(totalCost / 1_000_000).toFixed(1)} M</p>
+          <p className="text-base font-medium uppercase tracking-wider text-primary">Total Groupe</p>
+          <p className="mt-2 text-base font-bold text-primary">{(totalCost / 1_000_000).toFixed(1)} M</p>
           <p className="mt-0.5 text-base text-blue-600">FCFA / mois</p>
-          <p className="mt-3 text-base text-blue-700">{formatFcfa(totalCost)}</p>
+          <p className="mt-3 text-base text-primary">{formatFcfa(totalCost)}</p>
         </div>
       </div>
 
