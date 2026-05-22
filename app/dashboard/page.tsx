@@ -1,82 +1,175 @@
-import { ALERTS, SITES } from '@/app/lib/mock-data'
 import SectionHeader from './components/section-header'
-import { Factory, Flame, Fuel, Zap } from 'lucide-react'
+import { Flame, Fuel, Zap } from 'lucide-react'
+import { SITES } from '@/app/lib/mock-data'
 
-const SITE_CONSUMPTIONS = [
-  { site: 'SCCI 1', electricKwh: 14820, gasM3: 1260, fuelL: 740 },
-  { site: 'SCCI 2', electricKwh: 11340, gasM3: 1840, fuelL: 920 },
-  { site: 'ACC', electricKwh: 8920, gasM3: 410, fuelL: 360 },
+const SITE_OVERVIEW = [
+  {
+    site: 'SCCI 1',
+    displayName: 'SCCI 1',
+    updatedAgo: '12s',
+    electricKwh: 14820,
+    electricWarning: 15000,
+    electricCritical: 17500,
+    gasM3: 1260,
+    fuelL: 740,
+    status: 'Normal',
+    metersOnline: 12,
+    metersTotal: 12,
+  },
+  {
+    site: 'SCCI 2',
+    displayName: 'SCCI 2',
+    updatedAgo: '8s',
+    electricKwh: 11340,
+    electricWarning: 12500,
+    electricCritical: 14500,
+    gasM3: 1840,
+    fuelL: 920,
+    status: 'Alerte',
+    metersOnline: 8,
+    metersTotal: 9,
+  },
+  {
+    site: 'ACC',
+    displayName: 'ACC — Atlantic Cocoa',
+    updatedAgo: '5s',
+    electricKwh: 8920,
+    electricWarning: 10500,
+    electricCritical: 12000,
+    gasM3: 410,
+    fuelL: 360,
+    status: 'Critique',
+    metersOnline: 6,
+    metersTotal: 6,
+  },
 ]
 
 const formatNumber = (value: number) => value.toLocaleString('fr-FR')
 
-function thresholdStatus(total: number, warning: number, critical: number) {
-  if (total >= critical) {
+function usageTone(value: number, warning: number, critical: number) {
+  if (value >= critical) {
     return {
-      label: 'Critique',
-      text: 'text-red-700',
-      bg: 'bg-red-500',
-      badge: 'border-red-200 bg-red-50 text-red-700',
+      label: 'Dépassement',
+      row: 'border-red-200 bg-red-50 text-red-800',
+      dot: 'bg-red-500',
+      bar: 'bg-red-500',
     }
   }
 
-  if (total >= warning) {
+  if (value >= warning) {
     return {
-      label: 'À surveiller',
-      text: 'text-amber-700',
-      bg: 'bg-amber-500',
-      badge: 'border-amber-200 bg-amber-50 text-amber-700',
+      label: 'Proche seuil',
+      row: 'border-amber-200 bg-amber-50 text-amber-800',
+      dot: 'bg-amber-500',
+      bar: 'bg-amber-500',
     }
   }
 
   return {
     label: 'Sous seuil',
-    text: 'text-emerald-700',
-    bg: 'bg-emerald-500',
-    badge: 'border-emerald-200 bg-emerald-50 text-emerald-700',
+    row: 'border-emerald-200 bg-emerald-50 text-emerald-800',
+    dot: 'bg-emerald-500',
+    bar: 'bg-emerald-500',
+  }
+}
+
+function siteStatusTone(status: string) {
+  if (status === 'Critique') {
+    return {
+      card: 'border-l-red-500',
+      badge: 'bg-red-50 text-red-800',
+      bar: 'bg-red-500',
+      dot: 'bg-red-500',
+    }
+  }
+
+  if (status === 'Alerte') {
+    return {
+      card: 'border-l-amber-500',
+      badge: 'bg-amber-50 text-amber-800',
+      bar: 'bg-amber-500',
+      dot: 'bg-amber-500',
+    }
+  }
+
+  return {
+    card: 'border-l-emerald-500',
+    badge: 'bg-emerald-50 text-emerald-800',
+    bar: 'bg-emerald-500',
+    dot: 'bg-emerald-500',
   }
 }
 
 export default function DashboardPage() {
-  const totalKwh = SITES.reduce((s, site) => s + site.kwhToday, 0)
-  const activeAlerts = ALERTS.filter((a) => a.status === 'active').length
-  const consumptionBlocks = [
+  const totalElectric = SITE_OVERVIEW.reduce((sum, site) => sum + site.electricKwh, 0)
+  const totalGas = SITE_OVERVIEW.reduce((sum, site) => sum + site.gasM3, 0)
+  const totalFuel = SITE_OVERVIEW.reduce((sum, site) => sum + site.fuelL, 0)
+
+  const cards = [
     {
       label: 'Consommation électrique',
-      unit: 'kWh',
-      accent: 'text-[#54a8dc]',
-      bg: 'bg-[#54a8dc]',
-      warning: 34000,
-      critical: 39000,
+      value: `${formatNumber(totalElectric)} kWh`,
+      detail: 'Cumul journalier des 3 sites',
       icon: Zap,
-      values: SITE_CONSUMPTIONS.map(({ site, electricKwh }) => ({ site, value: electricKwh })),
+      rows: SITE_OVERVIEW.map((site) => {
+        const tone = usageTone(site.electricKwh, site.electricWarning, site.electricCritical)
+        return {
+          site: site.site,
+          value: `${formatNumber(site.electricKwh)} kWh`,
+          detail: tone.label,
+          progress: Math.min((site.electricKwh / site.electricCritical) * 100, 100),
+          tone,
+        }
+      }),
     },
     {
       label: 'Consommation gaz',
-      unit: 'm³',
-      accent: 'text-[#ef4444]',
-      bg: 'bg-[#ef4444]',
-      warning: 3200,
-      critical: 3800,
+      value: `${formatNumber(totalGas)} m³`,
+      detail: 'Cumul journalier gaz des 3 sites',
       icon: Flame,
-      values: SITE_CONSUMPTIONS.map(({ site, gasM3 }) => ({ site, value: gasM3 })),
+      rows: SITE_OVERVIEW.map((site) => {
+        const thresholds: Record<string, { warning: number; critical: number }> = {
+          'SCCI 1': { warning: 1500, critical: 1800 },
+          'SCCI 2': { warning: 1700, critical: 2100 },
+          ACC: { warning: 520, critical: 650 },
+        }
+        const threshold = thresholds[site.site]
+        const tone = usageTone(site.gasM3, threshold.warning, threshold.critical)
+        return {
+          site: site.site,
+          value: `${formatNumber(site.gasM3)} m³`,
+          detail: tone.label,
+          progress: Math.min((site.gasM3 / threshold.critical) * 100, 100),
+          tone,
+        }
+      }),
     },
     {
       label: 'Consommation carburant',
-      unit: 'L',
-      accent: 'text-[#e8be5c]',
-      bg: 'bg-[#e8be5c]',
-      warning: 1900,
-      critical: 2300,
+      value: `${formatNumber(totalFuel)} L`,
+      detail: 'Cumul journalier carburant des 3 sites',
       icon: Fuel,
-      values: SITE_CONSUMPTIONS.map(({ site, fuelL }) => ({ site, value: fuelL })),
+      rows: SITE_OVERVIEW.map((site) => {
+        const thresholds: Record<string, { warning: number; critical: number }> = {
+          'SCCI 1': { warning: 850, critical: 1050 },
+          'SCCI 2': { warning: 850, critical: 1050 },
+          ACC: { warning: 430, critical: 550 },
+        }
+        const threshold = thresholds[site.site]
+        const tone = usageTone(site.fuelL, threshold.warning, threshold.critical)
+        return {
+          site: site.site,
+          value: `${formatNumber(site.fuelL)} L`,
+          detail: tone.label,
+          progress: Math.min((site.fuelL / threshold.critical) * 100, 100),
+          tone,
+        }
+      }),
     },
   ]
-
   return (
     <div className="space-y-5 p-6">
-      <SectionHeader title="Vue d'ensemble" subtitle="Supervision temps réel — 3 sites industriels" />
-
+      <SectionHeader title="Vue d'ensemble" subtitle="Supervision groupe — synthèse par site" />
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-xl border border-gray-200 bg-white p-5">
           <p className="text-base font-medium uppercase tracking-wider text-black">Sites</p>
@@ -88,79 +181,103 @@ export default function DashboardPage() {
           </p>
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-base font-medium uppercase tracking-wider text-black">Points de mesure</p>
-          <p className="mt-2 text-base lg:text-3xl font-bold">26</p>
-          <p className="mt-1 text-base text-black">Somme des 3 sites</p>
+          <p className="text-base font-medium uppercase tracking-wider text-black">Consommation gaz</p>
+          <p className="mt-2 text-base lg:text-3xl font-bold text-[#9a6a14]">
+            {formatNumber(totalGas)} m³
+          </p>
+          <p className="mt-1 text-base text-black">Cumul journalier groupe</p>
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-base font-medium uppercase tracking-wider text-black">Alertes actives</p>
-          <p className={`mt-2 text-base lg:text-3xl font-bold ${activeAlerts > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>
-            {activeAlerts}
+          <p className="text-base font-medium uppercase tracking-wider text-black">Consommation carburant</p>
+          <p className="mt-2 text-base lg:text-3xl font-bold text-[#23689b]">
+            {formatNumber(totalFuel)} L
           </p>
-          <p className="mt-1 text-base text-black">{ALERTS.length} alertes sur 30 jours</p>
+          <p className="mt-1 text-base text-black">Cumul journalier groupe</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        {consumptionBlocks.map((block) => {
-          const total = block.values.reduce((sum, item) => sum + item.value, 0)
-          const status = thresholdStatus(total, block.warning, block.critical)
-          const warningUsage = Math.min((total / block.warning) * 100, 100)
-          const criticalUsage = Math.min((total / block.critical) * 100, 100)
-
-          return (
-            <div key={block.label} className="rounded-xl border border-gray-200 bg-white p-5">
-              <div className={` ${block.bg} p-3 rounded-lg`}>
-                <div className="flex items-start justify-between gap-3">
-                  <p className="text-base font-medium uppercase tracking-wider text-black">{block.label}</p>
-                  <div className="bg-white rounded-full size-14 flex justify-center items-center">
-                    <block.icon className={`size-8 ${block.accent}`} />
-                  </div>
+      <section className="grid grid-cols-3 gap-4">
+        {cards.map((card) => (
+          <article key={card.label} className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+            <div className="rounded-xl border border-[#d8e6f2] bg-[#eef6fb] p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-base font-semibold uppercase tracking-widest text-black">{card.label}</p>
+                  <p className="mt-3 text-3xl font-bold text-[#23689b]">{card.value}</p>
+                  <p className="mt-1 text-base font-medium text-black/70">{card.detail}</p>
                 </div>
-                <div className="flex justify-between items-end">
-                  <div className="">
-                    <p className="text-base md:text-base lg:text-base font-medium text-black">Total</p>
-                    <p className={`text-base lg:text-4xl font-bold text-black`}>
-                      {formatNumber(total)} {block.unit}
-                    </p>
-                  </div>
-                  <span className={`rounded-full border px-2 py-0.5 text-base h-fit font-semibold ${status.badge}`}>
-                    {status.label}
-                  </span>
-                </div>
-                <div className="mt-4 rounded-lg border border-gray-100 bg-gray-50 p-3">
-                  <div className="mb-2 flex items-center justify-between text-base">
-                    <span className="font-medium text-black">Seuil d&apos;utilisation</span>
-                    <span className={`font-semibold ${status.text}`}>
-                      {warningUsage.toFixed(0)} % du seuil
-                    </span>
-                  </div>
-                  <div className="h-2 overflow-hidden rounded-full bg-gray-200">
-                    <div className={`h-full rounded-full ${status.bg}`} style={{ width: `${criticalUsage}%` }} />
-                  </div>
-                  <div className="mt-2 flex items-center justify-between text-base text-black">
-                    <span>Seuil {formatNumber(block.warning)} {block.unit}</span>
-                    <span>Critique {formatNumber(block.critical)} {block.unit}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4 space-y-2 border-t border-gray-100 pt-4">
-                {block.values.map((item) => (
-                  <div key={item.site} className="flex items-center justify-between text-base bg-gray-500/10 rounded-lg p-2">
-                    <div className="flex gap-4 items-center">
-                      <Factory className="size-6 text-black" />
-                      <span className="text-base md:text-base lg:text-lg font-medium text-black">{item.site}</span>
-                    </div>
-                    <span className="text-base md:text-base lg:text-xl font-semibold text-black">
-                      {formatNumber(item.value)} {block.unit}
-                    </span>
-                  </div>
-                ))}
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#23689b] shadow-sm">
+                  <card.icon className="h-6 w-6" />
+                </span>
               </div>
             </div>
+            {/* <div className="mt-4 space-y-2">
+              {card.rows.map((row) => (
+                <div key={`${card.label}-${row.site}`} className={`rounded-xl border p-3 ${row.tone.row}`}>
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <span className={`h-2.5 w-2.5 rounded-full ${row.tone.dot}`} />
+                      <span className="text-base font-bold text-black">{row.site}</span>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-bold text-black">{row.value}</p>
+                      <p className="text-base font-semibold">{row.detail}</p>
+                    </div>
+                  </div>
+                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/80">
+                    <div className={`h-full rounded-full ${row.tone.bar}`} style={{ width: `${row.progress}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div> */}
+          </article>
+        ))}
+      </section>
+
+      <section className="grid grid-cols-3 gap-4">
+        {SITE_OVERVIEW.map((site) => {
+          const tone = siteStatusTone(site.status)
+          const share = totalElectric === 0 ? 0 : Math.round((site.electricKwh / totalElectric) * 100)
+
+          return (
+            <article key={site.site} className={`rounded-xl border border-gray-200 ${tone.card} border-l-4 bg-white p-5 shadow-sm`}>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h2 className="text-xl font-bold leading-tight text-black">{site.displayName}</h2>
+                  <p className="mt-0.5 text-base font-medium text-black">Mise à jour il y a {site.updatedAgo}</p>
+                </div>
+                <span className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-base font-bold ${tone.badge}`}>
+                  <span className={`h-2.5 w-2.5 rounded-full ${tone.dot}`} />
+                  {site.status}
+                </span>
+              </div>
+
+              <div className="mt-5 grid grid-cols-3 gap-3">
+                <div className="rounded-xl bg-[#f7f6ef] p-3">
+                  <p className="text-base font-semibold uppercase tracking-widest text-black/70">Élec.</p>
+                  <p className="mt-1 text-2xl font-bold leading-tight text-[#23689b]">{formatNumber(site.electricKwh)}</p>
+                  <p className="mt-1 text-base font-bold text-black">kWh</p>
+                </div>
+                <div className="rounded-xl bg-[#f7f6ef] p-3">
+                  <p className="text-base font-semibold uppercase tracking-widest text-black/70">Gaz</p>
+                  <p className="mt-1 text-2xl font-bold leading-tight text-black">{formatNumber(site.gasM3)}</p>
+                  <p className="mt-1 text-base font-bold text-black">m³</p>
+                </div>
+                <div className="rounded-xl bg-[#f7f6ef] p-3">
+                  <p className="text-base font-semibold uppercase tracking-widest text-black/70">Carb.</p>
+                  <p className="mt-1 text-2xl font-bold leading-tight text-black">{formatNumber(site.fuelL)}</p>
+                  <p className="mt-1 text-base font-bold text-black">L</p>
+                </div>
+              </div>
+
+              <div className="mt-5 h-2 overflow-hidden rounded-full bg-gray-100">
+                <div className={`h-full rounded-full ${tone.bar}`} style={{ width: `${share}%` }} />
+              </div>
+              <p className="mt-2 text-base font-medium text-black">{share}% de la consommation groupe</p>
+            </article>
           )
         })}
-      </div>
+      </section>
     </div>
   )
 }

@@ -169,30 +169,22 @@ function ZonePanel({ zone }: { zone: Zone }) {
 // ── Main component ────────────────────────────────────────────────────────────
 
 const ACC_DASHBOARD_METRICS = [
-  { label: 'Puissance instantanée', value: '1 284 kW', detail: 'C1+C2 · 72 % souscrit', icon: 'bolt', accent: 'text-amber-700', bar: 72 },
-  { label: 'Énergie jour', value: '8 920 kWh', detail: '+0,9 % vs J-1', icon: 'hash', accent: 'text-primary', bar: 61 },
-  { label: 'Gaz séchoir', value: '410 m³', detail: 'C6 · 76 % seuil jour', icon: 'flame', accent: 'text-emerald-700', bar: 76 },
-  { label: 'KPI cacao', value: '80,9 kWh/t', detail: 'Objectif 78,0 kWh/t', icon: 'target', accent: 'text-red-700', bar: 104 },
-  { label: 'Compteurs', value: '6', detail: 'C1 à C6 supervisés', icon: 'table', accent: 'text-black', bar: 100 },
-  { label: 'Points de mesure', value: '78', detail: 'Grandeurs électriques + gaz', icon: 'circle-dot', accent: 'text-primary', bar: 78 },
+  { label: 'Puissance', value: '1 284', unit: 'kW', detail: '72% souscrit', icon: 'bolt', accent: 'text-[#23689b]', border: 'border-t-[#23689b]', bar: 72, spark: [44, 52, 49, 58, 72] },
+  { label: 'Énergie jour', value: '8 920', unit: 'kWh', detail: '+0,9% vs J-1', icon: 'hash', accent: 'text-[#23689b]', border: 'border-t-[#23689b]', bar: 61, spark: [38, 46, 44, 51, 61] },
+  { label: 'Gaz séchoir', value: '410', unit: 'm³', detail: '76% seuil jour', icon: 'flame', accent: 'text-amber-700', border: 'border-t-amber-600', bar: 76, spark: [30, 42, 54, 68, 76] },
+  { label: 'KPI cacao', value: '80,9', unit: 'kWh/t', detail: 'Objectif 78 · +3,7%', icon: 'target', accent: 'text-red-700', border: 'border-t-red-500', bar: 104, badge: 'Hors objectif' },
+  { label: 'Compteurs', value: '6', unit: '', detail: '4 OK · 2 à surveiller', icon: 'table', accent: 'text-black', border: 'border-t-emerald-500', bar: 67, badge: '4 OK' },
+  { label: 'Score KPI', value: '86', unit: '%', detail: 'Objectif > 90%', icon: 'chart-dots', accent: 'text-emerald-700', border: 'border-t-lime-600', bar: 86 },
 ]
 
 const ACC_POINT_STATUS = [
-  { ref: 'C1', label: 'TGBT 1', value: '5 640 kWh', status: 'OK', color: 'bg-emerald-500' },
-  { ref: 'C2', label: 'TGBT 2', value: '3 280 kWh', status: 'OK', color: 'bg-emerald-500' },
-  { ref: 'C3', label: 'Usinage', value: '1 760 kWh', status: 'Surveiller', color: 'bg-amber-500' },
-  { ref: 'C4', label: 'Séchoir', value: '2 120 kWh', status: 'OK', color: 'bg-emerald-500' },
-  { ref: 'C5', label: 'Administration', value: '620 kWh', status: 'OK', color: 'bg-emerald-500' },
-  { ref: 'C6', label: 'Gaz Séchoir', value: '410 m³', status: 'Surveiller', color: 'bg-amber-500' },
+  { ref: 'C1', label: 'TGBT 1', meterType: 'Compteur électrique', grandeur: 'Énergie totale', value: '5 640', unit: 'kWh', detail: '63% · En ligne', status: 'OK', bar: 63, border: 'border-l-[#23689b]', color: 'bg-[#23689b]', badge: 'bg-blue-50 text-[#23689b]', icon: 'bolt', iconTone: 'bg-blue-50 text-[#23689b]' },
+  { ref: 'C2', label: 'TGBT 2', meterType: 'Compteur électrique', grandeur: 'Énergie totale', value: '3 280', unit: 'kWh', detail: '37% · En ligne', status: 'OK', bar: 37, border: 'border-l-emerald-500', color: 'bg-emerald-500', badge: 'bg-emerald-50 text-emerald-700', icon: 'bolt', iconTone: 'bg-emerald-50 text-emerald-700' },
+  { ref: 'C3', label: 'Usinage', meterType: 'Compteur électrique', grandeur: 'Énergie usinage', value: '1 760', unit: 'kWh', detail: '80% seuil', status: 'Surveiller', bar: 80, border: 'border-l-amber-600', color: 'bg-amber-600', badge: 'bg-amber-50 text-amber-700', icon: 'bolt', iconTone: 'bg-amber-50 text-amber-700' },
+  { ref: 'C4', label: 'Séchoir', meterType: 'Compteur électrique', grandeur: 'Énergie séchoir', value: '2 120', unit: 'kWh', detail: '50% · En ligne', status: 'OK', bar: 50, border: 'border-l-violet-600', color: 'bg-violet-600', badge: 'bg-violet-50 text-violet-700', icon: 'bolt', iconTone: 'bg-violet-50 text-violet-700' },
+  { ref: 'C5', label: 'Administration', meterType: 'Compteur électrique', grandeur: 'Énergie administration', value: '620', unit: 'kWh', detail: '7% énergie totale', status: 'OK', bar: 7, border: 'border-l-emerald-500', color: 'bg-emerald-500', badge: 'bg-emerald-50 text-emerald-700', icon: 'bolt', iconTone: 'bg-emerald-50 text-emerald-700' },
+  { ref: 'C6', label: 'Gaz séchoir', meterType: 'Compteur gaz', grandeur: 'Volume gaz', value: '410', unit: 'm³', detail: '76% seuil jour', status: 'Surveiller', bar: 76, border: 'border-l-amber-600', color: 'bg-amber-600', badge: 'bg-amber-50 text-amber-700', icon: 'flame', iconTone: 'bg-amber-50 text-amber-700' },
 ]
-
-const ACC_LOAD_PROFILE = [
-  { label: 'Usinage C3', value: 20, color: 'bg-amber-500' },
-  { label: 'Séchoir C4', value: 24, color: 'bg-emerald-500' },
-  { label: 'Admin C5', value: 7, color: 'bg-blue-500' },
-  { label: 'Autres TGBT', value: 49, color: 'bg-gray-400' },
-]
-
 type IndustrialSiteData = {
   metrics: Array<{ label: string; value: string; detail: string; icon: string; accent: string; bar: number }>
   points: Array<{ ref: string; label: string; value: string; status: string; color: string }>
@@ -530,41 +522,18 @@ type SingleLineNode = {
   meter?: string
 }
 
-type SingleLineLink = {
-  from: string
-  to: string
-  label?: string
-}
-
-const ACC_SINGLE_LINE_NODES: SingleLineNode[] = [
-  { id: 'cie', label: 'Arrivée CIE', subtitle: 'Réseau 400 V', type: 'source', x: 43, y: 5, w: 14, h: 6, detail: 'Alimentation principale du site ACC avant distribution vers les deux TGBT.' },
-  { id: 'mp-tgbt1', label: 'Masterpact NW25 H1', subtitle: '2500 A', type: 'breaker', x: 18, y: 18, w: 20, h: 7, detail: 'Disjoncteur général TGBT 1, ancien TGBT. Le compteur C1 est placé en aval.' },
-  { id: 'mp-tgbt2', label: 'Masterpact', subtitle: '3200 A', type: 'breaker', x: 62, y: 18, w: 20, h: 7, detail: 'Disjoncteur général TGBT 2, nouveau TGBT. Le compteur C2 est placé en aval.' },
-  { id: 'c1', label: 'C1', subtitle: 'Compteur TGBT 1', type: 'meter', x: 22, y: 30, w: 12, h: 7, detail: 'SOCOMEC DIRIS A40 · Modbus RS485 · mesure globale TGBT 1.', meter: 'C1' },
-  { id: 'c2', label: 'C2', subtitle: 'Compteur TGBT 2', type: 'meter', x: 66, y: 30, w: 12, h: 7, detail: 'SOCOMEC DIRIS A40 · Modbus RS485 · mesure globale TGBT 2.', meter: 'C2' },
-  { id: 'bus-tgbt1', label: 'Jeu de barres TGBT 1', subtitle: 'Ancien TGBT', type: 'busbar', x: 8, y: 44, w: 40, h: 5, detail: 'Barre de distribution TGBT 1 couvrant usinage, séchoir, chaudière, compresseur air 1, administration et GE.' },
-  { id: 'bus-tgbt2', label: 'Jeu de barres TGBT 2', subtitle: 'Nouveau TGBT', type: 'busbar', x: 52, y: 44, w: 40, h: 5, detail: 'Barre de distribution TGBT 2 couvrant broyeurs, compresseurs 2, infrarouge, affineurs, froid, UPS, tour cristallisation et GE J.' },
-  { id: 'c3', label: 'C3', subtitle: 'Usinage fèves', type: 'feeder', x: 7, y: 61, w: 15, h: 9, detail: 'Départ NS 160H vers l’atelier usinage fèves. Compteur proposé SOCOMEC DIRIS A40.', meter: 'C3' },
-  { id: 'c4', label: 'C4', subtitle: 'Séchoir', type: 'feeder', x: 25, y: 61, w: 15, h: 9, detail: 'Départ NS 100H vers le séchoir thermique. Compteur proposé SOCOMEC DIRIS A40.', meter: 'C4' },
-  { id: 'c5', label: 'C5', subtitle: 'Administration', type: 'feeder', x: 43, y: 61, w: 15, h: 9, detail: 'Départ NS 100H vers le bâtiment administratif et les bureaux. Compteur proposé SOCOMEC DIRIS A40.', meter: 'C5' },
-  { id: 'loads-tgbt1', label: 'Autres départs TGBT 1', subtitle: 'Chaudière · Air 1 · GE D/B', type: 'load', x: 7, y: 78, w: 33, h: 8, detail: 'Charges couvertes par C1 sans sous-comptage dédié dans la proposition actuelle.' },
-  { id: 'loads-tgbt2', label: 'Départs process TGBT 2', subtitle: 'Broyeurs · Froid · UPS · GE J', type: 'load', x: 60, y: 61, w: 30, h: 9, detail: 'Charges couvertes par C2: N5000-1, N5000-2, PG6000, compresseurs 2, infrarouge, affineurs, froid, UPS, tour cristallisation et GE J.' },
-  { id: 'c6', label: 'C6', subtitle: 'Gaz séchoir', type: 'meter', x: 34, y: 82, w: 16, h: 8, detail: 'Compteur gaz communicant sur arrivée gaz du séchoir · Elster BK-G / Itron Gallus · M-Bus / Impulsion.', meter: 'C6' },
-]
-
-const ACC_SINGLE_LINE_LINKS: SingleLineLink[] = [
-  { from: 'cie', to: 'mp-tgbt1', label: 'Alim. TGBT 1' },
-  { from: 'cie', to: 'mp-tgbt2', label: 'Alim. TGBT 2' },
-  { from: 'mp-tgbt1', to: 'c1' },
-  { from: 'mp-tgbt2', to: 'c2' },
-  { from: 'c1', to: 'bus-tgbt1' },
-  { from: 'c2', to: 'bus-tgbt2' },
-  { from: 'bus-tgbt1', to: 'c3' },
-  { from: 'bus-tgbt1', to: 'c4' },
-  { from: 'bus-tgbt1', to: 'c5' },
-  { from: 'bus-tgbt1', to: 'loads-tgbt1' },
-  { from: 'bus-tgbt2', to: 'loads-tgbt2' },
-  { from: 'c4', to: 'c6', label: 'Process séchoir' },
+const ACC_REFERENCE_SCHEMA_NODES: SingleLineNode[] = [
+  { id: 'cie', label: 'Poste de livraison CIE', subtitle: '630 kVA', type: 'source', x: 1.5, y: 4, w: 18, h: 9, detail: 'Poste de livraison CIE 630 kVA en amont de la distribution ACC.' },
+  { id: 'transformer', label: 'Transformateur', subtitle: 'Couplage amont', type: 'source', x: 23.5, y: 11, w: 7, h: 13, detail: 'Symbole de transformation avant répartition vers les deux TGBT.' },
+  { id: 'c1', label: 'C1', subtitle: 'Masterpact 2500A - TGBT 1', type: 'meter', x: 11, y: 28, w: 7, h: 6, detail: 'Compteur général C1 positionné sur le Masterpact 2500A - TGBT 1.', meter: 'C1' },
+  { id: 'c2', label: 'C2', subtitle: 'Masterpact 3200A - TGBT 2', type: 'meter', x: 34.5, y: 28, w: 7, h: 6, detail: 'Compteur général C2 positionné sur le Masterpact 3200A - TGBT 2.', meter: 'C2' },
+  { id: 'mp-tgbt1', label: 'Masterpact 2500A - TGBT 1', subtitle: 'Barre principale gauche', type: 'breaker', x: 2.5, y: 38, w: 26, h: 7, detail: 'Arrivée TGBT 1 ciblée par C1. Départ critique associé à l\'usinage fèves.' },
+  { id: 'mp-tgbt2', label: 'Masterpact 3200A - TGBT 2', subtitle: 'Barre principale droite', type: 'breaker', x: 31.5, y: 38, w: 28, h: 7, detail: 'Arrivée TGBT 2 ciblée par C2. Départs séchoir, administration et gaz séchoir représentés.' },
+  { id: 'target-zone', label: 'Zones cibles', subtitle: 'Process et Utilités', type: 'load', x: 2.5, y: 55, w: 58, h: 27, detail: 'Périmètre EMS cible: les TGBT C1/C2 et les départs névralgiques C3 à C6 pour une supervision granulaire multi-énergies.' },
+  { id: 'c3', label: 'C3', subtitle: 'Usinage fèves', type: 'feeder', x: 8, y: 72, w: 8, h: 6, detail: 'Départ usinage fèves en aval du Masterpact 2500A - TGBT 1.', meter: 'C3' },
+  { id: 'c4', label: 'C4', subtitle: 'Séchoir', type: 'feeder', x: 28, y: 72, w: 8, h: 6, detail: 'Départ séchoir en aval du TGBT 2, comptage électrique du process thermique.', meter: 'C4' },
+  { id: 'c5', label: 'C5', subtitle: 'Administration', type: 'feeder', x: 40, y: 72, w: 8, h: 6, detail: 'Depart administration, suivi tertiaire et bureaux.', meter: 'C5' },
+  { id: 'c6', label: 'C6', subtitle: 'Compteur gaz séchoir', type: 'meter', x: 52, y: 72, w: 8, h: 6, detail: 'Compteur gaz communicant du séchoir, intégré au suivi multi-énergies.', meter: 'C6' },
 ]
 
 function AccGlobalDashboard() {
@@ -572,101 +541,106 @@ function AccGlobalDashboard() {
 
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-3 gap-4">
+      <section className="grid grid-cols-6 gap-3">
         {ACC_DASHBOARD_METRICS.map((metric) => (
-          <div key={metric.label} className="rounded-xl border border-gray-200 bg-white p-5">
-            <div className="flex items-center justify-between">
-              <p className="text-base font-medium uppercase tracking-wider text-black">{metric.label}</p>
-              <Icon name={metric.icon} className="size-8 text-black/70" />
+          <article
+            key={metric.label}
+            className={`min-h-[172px] rounded-xl border border-gray-200 border-t-4 ${metric.border} bg-white p-4 shadow-sm`}
+          >
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="text-base font-semibold uppercase tracking-widest text-black">{metric.label}</p>
+                <div className="mt-2 flex items-end gap-1">
+                  <p className={`text-3xl font-bold leading-none ${metric.accent}`}>{metric.value}</p>
+                  {metric.unit && <span className="pb-0.5 text-base font-bold text-black">{metric.unit}</span>}
+                </div>
+              </div>
+              <Icon name={metric.icon} className="h-5 w-5 text-black/50" />
             </div>
-            <p className={`mt-3 text-base md:text-lg lg:text-3xl font-bold ${metric.accent}`}>{metric.value}</p>
-            <p className="mt-1 text-base text-black">{metric.detail}</p>
-            <div className="mt-4 h-2 overflow-hidden rounded-full bg-gray-100">
-              <div
-                className={`h-full rounded-full ${metric.bar > 90 ? 'bg-red-500' : metric.bar > 75 ? 'bg-amber-500' : 'bg-emerald-500'}`}
-                style={{ width: `${Math.min(metric.bar, 100)}%` }}
-              />
+
+            <div className="mt-4">
+              <div className="h-2 overflow-hidden rounded-full bg-gray-100">
+                <div
+                  className={`h-full rounded-full ${metric.bar > 100 ? 'bg-red-600' : metric.bar > 75 ? 'bg-amber-600' : 'bg-emerald-600'}`}
+                  style={{ width: `${Math.min(metric.bar, 100)}%` }}
+                />
+              </div>
+              <p className="mt-2 text-base font-medium text-black">{metric.detail}</p>
             </div>
-          </div>
+
+            {metric.spark ? (
+              <div className="mt-4 flex h-8 items-end gap-1.5">
+                {metric.spark.map((value, index) => (
+                  <span
+                    key={`${metric.label}-${index}`}
+                    className={`w-4 rounded-t ${index === metric.spark.length - 1 ? 'bg-[#23689b]' : 'bg-[#b7d4eb]'}`}
+                    style={{ height: `${Math.max(8, value / 1.3)}%` }}
+                  />
+                ))}
+              </div>
+            ) : metric.badge ? (
+              <span className={`mt-4 inline-flex rounded-md px-2 py-1 text-base font-bold ${metric.bar > 100 ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700'}`}>
+                {metric.badge}
+              </span>
+            ) : null}
+          </article>
         ))}
-      </div>
+      </section>
 
-      <div className="grid grid-cols-3 gap-4">
-        <div className="col-span-2 rounded-xl border border-gray-200 bg-white p-5">
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <p className="text-base md:text-lg font-semibold text-black">Points de mesure ACC</p>
-              <p className="mt-0.5 text-base text-black">Statut temps réel des compteurs C1 à C6</p>
-            </div>
-            <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-base font-semibold text-amber-700">
-              2 à surveiller
-            </span>
+      <section>
+        <div className="mb-3 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-black">Points de mesure ACC — Statut temps réel</h2>
+            <p className="mt-1 text-base text-black/70">Vue synthétique sur la période active : {dateFilter.label}</p>
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            {ACC_POINT_STATUS.map((point) => (
-              <div key={point.ref} className={`${point.color} rounded-lg border border-gray-100 p-3`}>
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-base md:text-lg font-bold text-white">{point.ref}</span>
-                  <span className={`h-2 w-2 rounded-full ${point.color}`} />
+          <div className="flex items-center gap-2">
+            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-base font-bold text-emerald-700">4 OK</span>
+            <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-base font-bold text-amber-700">2 à surveiller</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3">
+          {ACC_POINT_STATUS.map((point) => (
+            <article
+              key={point.ref}
+              className={`rounded-xl border border-gray-200 ${point.border} border-l-4 bg-[#fbfaf4] p-4 shadow-sm`}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex min-w-0 items-start gap-3">
+                  <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${point.iconTone}`}>
+                    <Icon name={point.icon} className="h-6 w-6" />
+                  </span>
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-lg font-bold text-black">{point.label}</p>
+                      <span className="rounded-md bg-white/80 px-2 py-0.5 text-base font-semibold text-black/70">
+                        {point.meterType}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-base font-semibold uppercase tracking-widest text-black/70">{point.grandeur}</p>
+                    <div className="mt-1 flex items-end gap-1.5">
+                      <p className="text-3xl font-bold text-black">{point.value}</p>
+                      <span className="pb-0.5 text-base font-bold text-black">{point.unit}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="mt-1 flex justify-between items-end text-base">
-                  <p className="mt-2 text-base md:text-lg font-medium text-white">{point.label}</p>
-                  {/* <span className="text-black">{point.status}</span> */}
-                  <span className="font-semibold text-white md:text-lg lg:text-xl">{point.value}</span>
-                </div>
+                <span className={`rounded-md px-2 py-1 font-mono text-base font-bold ${point.badge}`}>{point.ref}</span>
               </div>
-            ))}
-          </div>
-        </div>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-base md:text-lg font-semibold text-black">Répartition usages</p>
-          <p className="mt-0.5 text-base text-black">Part énergie jour par famille</p>
-          <div className="mt-5 space-y-4">
-            {ACC_LOAD_PROFILE.map((item) => (
-              <div key={item.label}>
-                <div className="mb-1 flex items-center justify-between text-base">
-                  <span className="font-medium text-black">{item.label}</span>
-                  <span className="font-semibold text-black text-lg">{item.value} %</span>
-                </div>
-                <div className="h-2 overflow-hidden rounded-full bg-gray-100">
-                  <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.value}%` }} />
-                </div>
+              <div className="mt-4 h-2 overflow-hidden rounded-full bg-white">
+                <div className={`h-full rounded-full ${point.color}`} style={{ width: `${point.bar}%` }} />
               </div>
-            ))}
-          </div>
+              <div className="mt-2 flex items-center justify-between gap-3 text-base">
+                <span className="font-medium text-black">{point.detail}</span>
+                {point.status !== 'OK' && <span className="font-bold text-amber-700">Surveiller</span>}
+              </div>
+            </article>
+          ))}
         </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4">
-        <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-base md:text-lg font-semibold text-black">Seuils critiques</p>
-          <div className="mt-4 space-y-3 text-base">
-            <div className="flex justify-between"><span className="text-black">Puissance C1+C2</span><span className="md:text-lg font-semibold text-amber-700">72 %</span></div>
-            <div className="flex justify-between"><span className="text-black">Gaz C6 journalier</span><span className="md:text-lg font-semibold text-amber-700">76 %</span></div>
-            <div className="flex justify-between"><span className="text-black">kWh/t cacao</span><span className="md:text-lg font-semibold text-red-700">+3,7</span></div>
-          </div>
-        </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-base md:text-lg font-semibold text-black">Qualité énergie</p>
-          <div className="mt-4 space-y-3 text-base">
-            <div className="flex justify-between"><span className="text-black">cos φ global</span><span className="md:text-lg font-semibold text-emerald-700">0,94</span></div>
-            <div className="flex justify-between"><span className="text-black">THD moyen</span><span className="md:text-lg font-semibold text-emerald-700">3,8 %</span></div>
-            <div className="flex justify-between"><span className="text-black">Disponibilité flux</span><span className="md:text-lg font-semibold text-emerald-700">100 %</span></div>
-          </div>
-        </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-base md:text-lg font-semibold text-black">Alertes ACC</p>
-          <div className="mt-4 space-y-3 text-base">
-            <div className="rounded-lg border border-amber-100 bg-amber-50 p-2 text-amber-800">C3 · Usinage +12 % vs profil</div>
-            <div className="rounded-lg border border-amber-100 bg-amber-50 p-2 text-amber-800">C6 · Gaz proche seuil journalier</div>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   )
 }
-
 function IndustrialGlobalDashboard({ site }: { site: SiteConfig }) {
   const data = INDUSTRIAL_SITE_DATA[site.slug]
   const dateFilter = useDateFilter()
@@ -919,40 +893,6 @@ function formatAccKpiValue(value: number, unit: string) {
   return unit ? `${formatted} ${unit}` : formatted
 }
 
-function getAccKpiStatus(kpi: (typeof ACC_KPIS)[number]) {
-  const ratio = kpi.value / kpi.target
-  const isGood = kpi.higherIsBetter ? ratio >= 1 : ratio <= 1
-  const isWarning = kpi.higherIsBetter ? ratio >= 0.9 : ratio <= 1.08
-
-  if (isGood) {
-    return {
-      label: 'Objectif tenu',
-      color: 'text-emerald-700',
-      bg: 'bg-emerald-50',
-      border: 'border-emerald-200',
-      bar: 'bg-emerald-500',
-    }
-  }
-
-  if (isWarning) {
-    return {
-      label: 'À surveiller',
-      color: 'text-amber-700',
-      bg: 'bg-amber-50',
-      border: 'border-amber-200',
-      bar: 'bg-amber-500',
-    }
-  }
-
-  return {
-    label: 'Hors objectif',
-    color: 'text-red-700',
-    bg: 'bg-red-50',
-    border: 'border-red-200',
-    bar: 'bg-red-500',
-  }
-}
-
 function getAccKpiGap(kpi: (typeof ACC_KPIS)[number]) {
   const gap = ((kpi.value - kpi.target) / kpi.target) * 100
   const isPositive = kpi.higherIsBetter ? gap >= 0 : gap <= 0
@@ -964,7 +904,6 @@ function getAccKpiGap(kpi: (typeof ACC_KPIS)[number]) {
   }
 }
 
-const ACC_KPI_TREND = [74, 77, 82, 79, 81, 76, 84, 80, 78, 83, 81, 80.9]
 
 function AccKpiDashboard() {
   const dateFilter = useDateFilter()
@@ -974,254 +913,258 @@ function AccKpiDashboard() {
       return kpi.higherIsBetter ? ratio >= 0.9 : ratio <= 1.08
     }).length / ACC_KPIS.length) * 100
   )
+  const visibleKpis = ACC_KPIS.filter((kpi) => kpi.label !== 'PUE Process (ratio usages)')
+  const sourceCards = [
+    { label: 'Énergie totale', value: '8 920 kWh' },
+    { label: 'Cacao traité', value: '110,3 t' },
+    { label: 'Tonnage séché', value: '47,8 t' },
+    { label: 'Tonnage usiné', value: '54,2 t' },
+    { label: 'Gaz séchoir', value: '410 m³' },
+  ]
+
+  function cardStatus(kpi: (typeof ACC_KPIS)[number]) {
+    const gap = ((kpi.value - kpi.target) / kpi.target) * 100
+    const isBetter = kpi.higherIsBetter ? gap >= 0 : gap <= 0
+
+    if (isBetter) {
+      return {
+        label: 'Objectif tenu',
+        badge: 'bg-emerald-50 text-emerald-800',
+        border: 'border-t-emerald-500',
+        value: 'text-emerald-700',
+        bar: 'bg-emerald-500',
+        marker: 'bg-[#23689b]',
+      }
+    }
+
+    if (kpi.label.includes('gaz')) {
+      return {
+        label: 'À surveiller',
+        badge: 'bg-amber-50 text-amber-800',
+        border: 'border-t-amber-600',
+        value: 'text-amber-700',
+        bar: 'bg-amber-600',
+        marker: 'bg-[#23689b]',
+      }
+    }
+
+    return {
+      label: 'Hors objectif',
+      badge: 'bg-red-50 text-red-800',
+      border: 'border-t-red-500',
+      value: 'text-red-700',
+      bar: 'bg-red-500',
+      marker: 'bg-[#23689b]',
+    }
+  }
+
+  function progressFor(kpi: (typeof ACC_KPIS)[number]) {
+    if (kpi.higherIsBetter) return Math.min((kpi.value / kpi.target) * 100, 100)
+    return Math.min((kpi.target / kpi.value) * 100, 100)
+  }
 
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-[1.2fr_0.8fr] gap-4">
-        <section className="rounded-xl border border-gray-200 bg-white p-5">
-          <div className="flex items-start justify-between gap-4">
+      <section className="grid grid-cols-[1fr_200px] gap-4">
+        <div>
+          <div className="mb-3 flex items-center justify-between gap-4">
             <div>
-              <p className="text-base font-semibold uppercase tracking-widest text-black">Vue KPI ACC</p>
-              <h2 className="mt-2 text-base font-bold text-black">Performance énergétique par tonne produite</h2>
-              <p className="mt-1 text-base text-black">
-                Données factices calculées à partir des points C1 à C6 et des tonnages ERP · {dateFilter.label}.
-              </p>
-            </div>
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-right">
-              <p className="text-base font-semibold uppercase tracking-widest text-emerald-700">Score KPI</p>
-              <p className="mt-1 text-base font-bold text-emerald-800">{kpiScore} %</p>
+              <h2 className="text-xl font-bold text-black">Vue KPI ACC — Performance énergétique par tonne produite</h2>
+              <p className="mt-1 text-base text-black/70">Sources C1 à C6 et tonnages ERP · {dateFilter.label}</p>
             </div>
           </div>
-
-          <div className="mt-5 grid grid-cols-5 gap-3">
-            {[
-              { label: 'Énergie totale', value: '8 920 kWh', icon: 'bolt' },
-              { label: 'Cacao traité', value: '110,3 t', icon: 'building-factory' },
-              { label: 'Tonnage séché', value: '47,8 t', icon: 'flame' },
-              { label: 'Tonnage usiné', value: '54,2 t', icon: 'tools' },
-              { label: 'Gaz séchoir', value: '410 m³', icon: 'droplet' },
-            ].map((input) => (
-              <div key={input.label} className="rounded-lg border border-gray-100 bg-gray-50 p-3">
-                {/* <div className="flex items-center justify-between">
-                  <Icon name={input.icon} className="h-4 w-4 text-black" />
-                  <span className="text-base font-semibold uppercase tracking-widest text-black">Source</span>
-                </div> */}
-                <p className="mt-3 text-base md:text-lg lg:text-2xl font-bold text-black">{input.value}</p>
-                <p className="mt-0.5 text-base text-black">{input.label}</p>
+          <div className="grid grid-cols-5 gap-3">
+            {sourceCards.map((source) => (
+              <div key={source.label} className="rounded-xl border border-gray-100 bg-[#fbfaf4] p-4">
+                <p className="text-base font-semibold uppercase tracking-widest text-black">{source.label}</p>
+                <p className="mt-3 text-2xl font-bold text-black">{source.value}</p>
               </div>
             ))}
           </div>
-        </section>
+        </div>
 
-        <section className="rounded-xl border border-gray-200 bg-white p-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-base font-semibold text-black">Tendance kWh/t cacao</p>
-              <p className="mt-0.5 text-base text-black">12 derniers mois, valeur cible 78 kWh/t</p>
-            </div>
-            <Icon name="chart-line" className="h-4 w-4 text-black" />
-          </div>
-          <div className="mt-6 flex h-36 items-end gap-2 border-b border-gray-200 pb-2">
-            {ACC_KPI_TREND.map((value, index) => (
-              <div key={`${value}-${index}`} className="flex flex-1 flex-col items-center gap-1">
-                <div
-                  className={`w-full rounded-t ${value > 78 ? 'bg-amber-400' : 'bg-emerald-500'}`}
-                  style={{ height: `${Math.max(24, (value / 90) * 120)}px` }}
-                  title={`${value} kWh/t`}
-                />
-                <span className="text-base text-black">{index + 1}</span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 grid grid-cols-2 gap-3 text-base">
-            <div className="rounded-lg bg-gray-50 p-3">
-              <p className="text-base text-black">Moyenne</p>
-              <p className="mt-1 font-bold text-black">79,6 kWh/t</p>
-            </div>
-            <div className="rounded-lg bg-amber-50 p-3">
-              <p className="text-base text-amber-700">Dernier mois</p>
-              <p className="mt-1 font-bold text-amber-800">80,9 kWh/t</p>
+        <aside className="rounded-xl border border-gray-200 bg-white p-5 text-center shadow-sm">
+          <p className="text-base font-semibold uppercase tracking-widest text-black">Score KPI global</p>
+          <div className="relative mx-auto mt-5 h-24 w-24">
+            <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
+              <circle cx="50" cy="50" r="36" fill="none" stroke="#f3ead9" strokeWidth="10" />
+              <circle
+                cx="50"
+                cy="50"
+                r="36"
+                fill="none"
+                stroke="#b7790b"
+                strokeLinecap="round"
+                strokeWidth="10"
+                strokeDasharray={`${2 * Math.PI * 36}`}
+                strokeDashoffset={`${2 * Math.PI * 36 * (1 - kpiScore / 100)}`}
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-2xl font-bold text-amber-700">{kpiScore}%</span>
             </div>
           </div>
-        </section>
-      </div>
+          <p className="mt-3 text-base font-medium text-black">Objectif &gt; 90%</p>
+          <span className="mt-3 inline-flex rounded-md bg-amber-50 px-4 py-2 text-base font-bold text-amber-800">À améliorer</span>
+        </aside>
+      </section>
 
       <section className="grid grid-cols-3 gap-4">
-        {ACC_KPIS.map((kpi) => {
-          const status = getAccKpiStatus(kpi)
+        {visibleKpis.map((kpi) => {
+          const status = cardStatus(kpi)
           const gap = getAccKpiGap(kpi)
-          const progress = Math.min((kpi.value / kpi.target) * 100, 125)
+          const progress = progressFor(kpi)
+          const targetPosition = Math.min(Math.max((kpi.target / Math.max(kpi.value, kpi.target)) * 100, 8), 96)
 
           return (
-            <article key={kpi.label} className="rounded-xl border border-gray-200 bg-white p-5">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-base font-semibold leading-snug text-black">{kpi.label}</p>
-                  <p className="mt-1 text-base text-black">{kpi.detail}</p>
-                </div>
-                <span className={`shrink-0 rounded-full border px-2 py-1 text-base font-bold ${status.bg} ${status.border} ${status.color}`}>
-                  {status.label}
-                </span>
+            <article key={kpi.label} className={`rounded-xl border border-gray-200 border-t-4 ${status.border} bg-white p-5 shadow-sm`}>
+              <div className="flex min-h-[58px] items-start justify-between gap-4">
+                <h3 className="max-w-[58%] text-lg font-bold leading-tight text-black">{kpi.label}</h3>
+                <span className={`rounded-md px-3 py-2 text-base font-bold ${status.badge}`}>{status.label}</span>
               </div>
 
-              <div className="mt-5 flex items-end justify-between">
-                <div>
-                  <p className="text-base font-bold text-black">{formatAccKpiValue(kpi.value, kpi.unit)}</p>
-                  <p className="mt-1 text-base text-black">Objectif {formatAccKpiValue(kpi.target, kpi.unit)}</p>
-                </div>
-                <p className={`text-base font-bold ${gap.color}`}>{gap.text}</p>
+              <div className="mt-4 flex items-end gap-2">
+                <p className={`text-3xl font-bold leading-none ${status.value}`}>
+                  {kpi.value.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
+                </p>
+                <span className="pb-0.5 text-base font-bold text-black">{kpi.unit}</span>
               </div>
 
-              <div className="mt-4">
-                <div className="mb-1 flex justify-between text-base font-semibold uppercase tracking-widest text-black">
-                  <span>Réalisé</span>
-                  <span>Cible</span>
-                </div>
-                <div className="h-2 overflow-hidden rounded-full bg-gray-100">
-                  <div className={`h-full rounded-full ${status.bar}`} style={{ width: `${Math.min(progress, 100)}%` }} />
-                </div>
+              <div className="mt-4 grid grid-cols-3 items-end text-base">
+                <span className="font-medium text-black">Réalisé</span>
+                <span className={`text-center font-bold ${gap.color}`}>{gap.text}</span>
+                <span className="text-right font-medium text-black">Cible</span>
+              </div>
+              <div className="relative mt-2 h-3 rounded-full bg-gray-100">
+                <div className={`h-full rounded-full ${status.bar}`} style={{ width: `${progress}%` }} />
+                <span
+                  className={`absolute top-[-4px] h-5 w-1.5 rounded-full ${status.marker}`}
+                  style={{ left: `${targetPosition}%` }}
+                />
               </div>
 
-              <div className="mt-4 rounded-lg border border-gray-100 bg-gray-50 p-3">
-                <p className="text-base font-semibold uppercase tracking-widest text-black">Formule</p>
-                <p className="mt-1 text-base leading-relaxed text-black">{kpi.formula}</p>
+              <p className="mt-3 text-base leading-snug text-black">
+                Objectif {formatAccKpiValue(kpi.target, kpi.unit)} · Formule : {kpi.formula}
+              </p>
+            </article>
+          )
+        })}
+      </section>
+    </div>
+  )
+}
+function AccPointDetailDashboard({ zone }: { zone: Zone }) {
+  const dateFilter = useDateFilter()
+  const meterId = zone.name.match(/C\d/)?.[0] ?? 'C1'
+  const meter = ACC_POINT_DETAIL_DATA[meterId] ?? ACC_POINT_DETAIL_DATA.C1
+  const metricAt = (index: number) => meter.metrics[index]
+  const splitValue = (value: string) => {
+    if (value === 'N/A') return { main: value, unit: '' }
+    const match = value.match(/^(.+?)\s+([^\s]+)$/)
+    return match ? { main: match[1], unit: match[2] } : { main: value, unit: '' }
+  }
+  const imbalanceByMeter: Record<string, string> = {
+    C1: '1,8 %',
+    C2: '1,5 %',
+    C3: '4,1 %',
+    C4: '2,2 %',
+    C5: '1,9 %',
+    C6: 'N/A',
+  }
+  const energyBudgetByMeter: Record<string, string> = {
+    C1: '63% budget',
+    C2: '37% budget',
+    C3: '80% seuil',
+    C4: '50% budget',
+    C5: '7% énergie',
+    C6: '76% seuil',
+  }
+  const cards = [
+    { title: 'PUISSANCE ACTIVE TOTALE', metric: metricAt(0), footer: 'Variation', right: metricAt(0).trend, bar: 62 },
+    { title: 'PUISSANCE RÉACTIVE TOTALE', metric: metricAt(1), footer: 'Variation', right: metricAt(1).trend, bar: 38 },
+    { title: 'FACTEUR DE PUISSANCE COS φ', metric: metricAt(8), footer: 'Seuil min 0,85', right: metricAt(8).value === 'N/A' ? 'N/A' : 'OK', bar: 96 },
+    { title: 'TENSION L1-L2', metric: metricAt(2), footer: 'Ref 400V ±5%', right: metricAt(2).trend, bar: 84 },
+    { title: 'TENSION L2-L3', metric: metricAt(3), footer: 'Ref 400V ±5%', right: metricAt(3).trend, bar: 83 },
+    { title: 'TENSION L3-L1', metric: metricAt(4), footer: 'Ref 400V ±5%', right: metricAt(4).trend, bar: 85 },
+    { title: 'COURANT L1', metric: metricAt(5), footer: 'Seuil 1200A', right: metricAt(5).trend, bar: 90 },
+    { title: 'COURANT L2', metric: metricAt(6), footer: 'Seuil 1200A', right: metricAt(6).trend, bar: 87 },
+    { title: 'COURANT L3', metric: metricAt(7), footer: 'Seuil 1200A', right: metricAt(7).trend, bar: 89 },
+    { title: 'DÉSÉQUILIBRE COURANT', customValue: imbalanceByMeter[meterId] ?? '1,8 %', status: meterId === 'C3' ? 'watch' : 'ok', footer: 'Seuil max 5%', right: meterId === 'C3' ? 'Surveiller' : 'Normal', bar: meterId === 'C3' ? 82 : 24 },
+    { title: 'ÉNERGIE ACTIVE (INDEX)', metric: metricAt(10), footer: 'Journée', right: energyBudgetByMeter[meterId] ?? '63% budget', bar: meterId === 'C3' ? 80 : meterId === 'C6' ? 76 : 63 },
+    { title: 'THD TENSION (L1)', customValue: meterId === 'C6' ? 'N/A' : meterId === 'C3' ? '5,8 %' : '2,4 %', status: meterId === 'C3' ? 'watch' : 'ok', footer: 'Seuil max 8%', right: meterId === 'C3' ? 'Surveiller' : 'Normal', bar: meterId === 'C3' ? 72 : 30 },
+  ]
+
+  return (
+    <div className="space-y-4">
+      <section className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm">
+        <div className="flex items-center gap-3">
+          <span
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-base font-bold"
+            style={{ background: zone.bgColor, color: zone.textColor }}
+          >
+            {meterId}
+          </span>
+          <div>
+            <p className="text-base font-semibold uppercase tracking-widest text-black">Détail par point · {dateFilter.label}</p>
+            <h2 className="mt-1 text-xl font-bold text-black">{meter.label}</h2>
+            <p className="mt-0.5 text-base font-medium text-black/70">{meter.role}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-base font-bold text-emerald-700">En ligne</span>
+          <span className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-base font-bold text-black">
+            {meterId === 'C6' ? 'M-Bus / Impulsion' : 'Modbus RS485'}
+          </span>
+        </div>
+      </section>
+
+      {meterId === 'C6' && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-base font-medium text-amber-800">
+          C6 est un compteur gaz : les grandeurs électriques non applicables restent affichées pour conserver la même grille de supervision.
+        </div>
+      )}
+
+      <section className="grid grid-cols-3 gap-3">
+        {cards.map((card) => {
+          const metric = card.metric
+          const status = card.status ?? metric?.status ?? 'ok'
+          const value = splitValue(card.customValue ?? metric?.value ?? 'N/A')
+          const isWatch = status === 'watch'
+          const isAlert = status === 'alert'
+          const border = isAlert ? 'border-l-red-500' : isWatch ? 'border-l-amber-500' : 'border-l-emerald-500'
+          const valueColor = isAlert ? 'text-red-700' : isWatch ? 'text-amber-700' : card.title.includes('TENSION') ? 'text-black' : 'text-emerald-700'
+          const barColor = isAlert ? 'bg-red-500' : isWatch ? 'bg-amber-600' : card.title.includes('PUISSANCE') || card.title.includes('ÉNERGIE') ? 'bg-[#23689b]' : 'bg-emerald-500'
+          const rightColor = isAlert ? 'text-red-700' : isWatch ? 'text-amber-700' : 'text-emerald-700'
+
+          return (
+            <article key={card.title} className={`min-h-[124px] rounded-xl border border-gray-100 ${border} border-l-4 bg-[#fbfaf4] p-4 shadow-sm`}>
+              <p className="min-h-[34px] text-base font-semibold uppercase tracking-widest text-black/80">{card.title}</p>
+              <div className="mt-2 flex items-end gap-2">
+                <p className={`font-mono text-3xl font-bold leading-none ${valueColor}`}>{value.main}</p>
+                {value.unit && <span className="pb-0.5 text-base font-bold text-black">{value.unit}</span>}
+              </div>
+              <div className="mt-3 h-2 overflow-hidden rounded-full bg-white">
+                <div className={`h-full rounded-full ${barColor}`} style={{ width: `${card.bar}%` }} />
+              </div>
+              <div className="mt-2 flex items-center justify-between gap-3 text-base">
+                <span className="font-medium text-black">{card.footer}</span>
+                <span className={`font-bold ${rightColor}`}>{card.right}</span>
               </div>
             </article>
           )
         })}
       </section>
-
-      <section className="rounded-xl border border-gray-200 bg-white p-5">
-        <div className="mb-4 flex items-center justify-between">
-          <div>
-            <p className="text-base font-semibold text-black">Table de calcul KPI</p>
-            <p className="mt-0.5 text-base text-black">Traçabilité entre formule, sources et résultat affiché</p>
-          </div>
-          <Icon name="table" className="h-4 w-4 text-black" />
-        </div>
-        <div className="overflow-hidden rounded-lg border border-gray-100">
-          <table className="w-full text-left text-base">
-            <thead className="bg-gray-50 text-base uppercase tracking-widest text-black">
-              <tr>
-                <th className="px-4 py-3 font-semibold">KPI</th>
-                <th className="px-4 py-3 font-semibold">Calcul</th>
-                <th className="px-4 py-3 font-semibold">Résultat</th>
-                <th className="px-4 py-3 font-semibold">Objectif</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {ACC_KPIS.map((kpi) => (
-                <tr key={kpi.label} className="bg-white">
-                  <td className="px-4 py-3 font-medium text-black">{kpi.label}</td>
-                  <td className="px-4 py-3 text-black">{kpi.formula}</td>
-                  <td className="px-4 py-3 font-semibold text-black">{formatAccKpiValue(kpi.value, kpi.unit)}</td>
-                  <td className="px-4 py-3 text-black">{formatAccKpiValue(kpi.target, kpi.unit)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
     </div>
   )
 }
-
-function AccPointDetailDashboard({ zone }: { zone: Zone }) {
-  const dateFilter = useDateFilter()
-  const meterId = zone.name.match(/C\d/)?.[0] ?? 'C1'
-  const meter = ACC_POINT_DETAIL_DATA[meterId] ?? ACC_POINT_DETAIL_DATA.C1
-  const watchCount = meter.metrics.filter((metric) => metric.status === 'watch').length
-  const alertCount = meter.metrics.filter((metric) => metric.status === 'alert').length
-  const statusStyles: Record<AccPointMetric['status'], string> = {
-    ok: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-    watch: 'border-amber-200 bg-amber-50 text-amber-700',
-    alert: 'border-red-200 bg-red-50 text-red-700',
-  }
-
-  return (
-    <div className="space-y-5">
-      <section className="rounded-xl border border-gray-200 bg-white p-5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="min-w-0">
-            <p className="text-base font-semibold uppercase tracking-widest text-black">Détail du point de mesure · {dateFilter.label}</p>
-            <div className="mt-2 flex items-center gap-3">
-              <span
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-base font-bold"
-                style={{ background: zone.bgColor, color: zone.textColor }}
-              >
-                {meterId}
-              </span>
-              <div>
-                <h2 className="text-base font-bold text-black">{meter.label}</h2>
-                <p className="mt-0.5 text-base text-black">{meter.role}</p>
-              </div>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-base font-semibold text-emerald-700">
-              {meter.metrics.length - watchCount - alertCount} OK
-            </span>
-            <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-base font-semibold text-amber-700">
-              {watchCount} à surveiller
-            </span>
-          </div>
-        </div>
-
-        <div className="mt-5 grid grid-cols-4 gap-3">
-          {[
-            { label: 'Compteur', value: meterId, icon: 'hash' },
-            { label: 'État communication', value: 'En ligne', icon: 'activity' },
-            { label: 'Protocole', value: meterId === 'C6' ? 'M-Bus / Impulsion' : 'Modbus RS485', icon: 'wave-sine' },
-            { label: 'Dernière mesure', value: 'il y a 12 s', icon: 'clock' },
-          ].map((item) => (
-            <div key={item.label} className="rounded-lg border border-gray-100 bg-gray-50 p-3">
-              <div className="flex items-center justify-between">
-                <p className="text-base font-medium text-black">{item.label}</p>
-                <Icon name={item.icon} className="h-4 w-4 text-black" />
-              </div>
-              <p className="mt-2 text-base font-bold text-black">{item.value}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {meterId === 'C6' && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-base text-amber-800">
-          C6 est un compteur gaz: les grandeurs électriques sont conservées dans la grille pour garder la même structure de supervision, mais elles sont marquées non applicables.
-        </div>
-      )}
-
-      <section className="grid grid-cols-3 gap-4">
-        {meter.metrics.map((metric) => (
-          <article key={metric.label} className="rounded-xl border border-gray-200 bg-white p-4">
-            <div className="flex items-start justify-between gap-3">
-              <p className="text-base font-semibold leading-snug text-black">{metric.label}</p>
-              <span className={`rounded-full border px-2 py-0.5 text-base font-bold ${statusStyles[metric.status]}`}>
-                {metric.status === 'ok' ? 'OK' : metric.status === 'watch' ? 'Surveiller' : 'Alerte'}
-              </span>
-            </div>
-            <p className="mt-4 text-base font-bold text-black">{metric.value}</p>
-            <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
-              <span className="text-base text-black">Variation</span>
-              <span className={`text-base font-semibold ${metric.status === 'watch' ? 'text-amber-700' : metric.status === 'alert' ? 'text-red-700' : 'text-emerald-700'}`}>
-                {metric.trend}
-              </span>
-            </div>
-          </article>
-        ))}
-      </section>
-    </div>
-  )
-}
-
 function AccSingleLineCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
-  const [selectedId, setSelectedId] = useState('c1')
+  const [selectedId, setSelectedId] = useState('target-zone')
   const selectedNode =
-    ACC_SINGLE_LINE_NODES.find((node) => node.id === selectedId) ??
-    ACC_SINGLE_LINE_NODES.find((node) => node.id === 'c1') ??
-    ACC_SINGLE_LINE_NODES[0]
+    ACC_REFERENCE_SCHEMA_NODES.find((node) => node.id === selectedId) ??
+    ACC_REFERENCE_SCHEMA_NODES.find((node) => node.id === 'target-zone') ??
+    ACC_REFERENCE_SCHEMA_NODES[0]
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -1240,109 +1183,272 @@ function AccSingleLineCanvas() {
     const height = rect.height
     const px = (value: number) => (value / 100) * width
     const py = (value: number) => (value / 100) * height
-    const nodeById = new Map(ACC_SINGLE_LINE_NODES.map((node) => [node.id, node]))
+    const isActive = (id: string) => id === selectedId || id === hoveredId
 
-    ctx.clearRect(0, 0, width, height)
-    ctx.fillStyle = '#f8fafc'
-    ctx.fillRect(0, 0, width, height)
-
-    ctx.strokeStyle = '#e5e7eb'
-    ctx.lineWidth = 1
-    for (let i = 0; i <= 10; i += 1) {
+    const drawLine = (points: Array<[number, number]>, options: { width?: number; color?: string; dash?: number[] } = {}) => {
+      ctx.save()
+      ctx.strokeStyle = options.color ?? '#111827'
+      ctx.lineWidth = options.width ?? 3
+      ctx.lineCap = 'square'
+      ctx.lineJoin = 'miter'
+      if (options.dash) ctx.setLineDash(options.dash)
       ctx.beginPath()
-      ctx.moveTo(px(i * 10), 0)
-      ctx.lineTo(px(i * 10), height)
+      points.forEach(([x, y], index) => {
+        if (index === 0) ctx.moveTo(px(x), py(y))
+        else ctx.lineTo(px(x), py(y))
+      })
       ctx.stroke()
-      ctx.beginPath()
-      ctx.moveTo(0, py(i * 10))
-      ctx.lineTo(width, py(i * 10))
-      ctx.stroke()
+      ctx.restore()
     }
 
-    ctx.strokeStyle = '#94a3b8'
-    ctx.lineWidth = 2
-    ctx.lineCap = 'round'
-    ACC_SINGLE_LINE_LINKS.forEach((link) => {
-      const from = nodeById.get(link.from)
-      const to = nodeById.get(link.to)
-      if (!from || !to) return
-
-      const fromX = px(from.x + from.w / 2)
-      const fromY = py(from.y + from.h)
-      const toX = px(to.x + to.w / 2)
-      const toY = py(to.y)
-      const midY = fromY + (toY - fromY) * 0.48
-
-      ctx.beginPath()
-      ctx.moveTo(fromX, fromY)
-      ctx.lineTo(fromX, midY)
-      ctx.lineTo(toX, midY)
-      ctx.lineTo(toX, toY)
-      ctx.stroke()
-
-      if (link.label) {
-        ctx.fillStyle = '#64748b'
-        ctx.font = '600 10px Arial'
-        ctx.textAlign = 'center'
-        ctx.fillText(link.label, (fromX + toX) / 2, midY - 5)
+    const drawLabel = (text: string, x: number, y: number, options: { size?: number; weight?: number; color?: string; align?: CanvasTextAlign; rotate?: boolean } = {}) => {
+      ctx.save()
+      ctx.fillStyle = options.color ?? '#111827'
+      ctx.font = `${options.weight ?? 700} ${Math.max(9, (options.size ?? 14) * Math.min(width / 1100, 1.15))}px Arial`
+      ctx.textAlign = options.align ?? 'center'
+      ctx.textBaseline = 'middle'
+      if (options.rotate) {
+        ctx.translate(px(x), py(y))
+        ctx.rotate(-Math.PI / 2)
+        ctx.fillText(text, 0, 0)
+      } else {
+        ctx.fillText(text, px(x), py(y))
       }
-    })
+      ctx.restore()
+    }
 
-    ACC_SINGLE_LINE_NODES.forEach((node) => {
-      const isActive = node.id === selectedId
-      const isHover = node.id === hoveredId
-      const x = px(node.x)
-      const y = py(node.y)
-      const w = px(node.w)
-      const h = py(node.h)
-      const fill =
-        node.type === 'source' ? '#eff6ff' :
-        node.type === 'breaker' ? '#fff7ed' :
-        node.type === 'busbar' ? '#111827' :
-        node.type === 'meter' ? '#fef3c7' :
-        node.type === 'feeder' ? '#ffffff' :
-        '#f1f5f9'
-      const stroke =
-        isActive ? '#d97706' :
-        isHover ? '#f59e0b' :
-        node.type === 'busbar' ? '#111827' :
-        '#cbd5e1'
+    const drawChip = (text: string, x: number, y: number, options: { pointer?: 'left' | 'right' | 'none'; active?: boolean } = {}) => {
+      const chipWidth = px(5.8)
+      const chipHeight = py(5.2)
+      const left = px(x)
+      const top = py(y)
+      const radius = Math.min(10, chipHeight / 3)
 
-      ctx.fillStyle = fill
-      ctx.strokeStyle = stroke
-      ctx.lineWidth = isActive || isHover ? 2.5 : 1.5
+      ctx.save()
+      if (options.active) {
+        ctx.shadowColor = 'rgba(16, 185, 129, 0.45)'
+        ctx.shadowBlur = 16
+      }
+      ctx.fillStyle = '#7bd99c'
+      ctx.strokeStyle = options.active ? '#047857' : '#65c98a'
+      ctx.lineWidth = options.active ? 2.5 : 1.5
       ctx.beginPath()
-      ctx.roundRect(x, y, w, h, node.type === 'busbar' ? 4 : 8)
+      ctx.roundRect(left, top, chipWidth, chipHeight, radius)
       ctx.fill()
       ctx.stroke()
 
-      ctx.fillStyle = node.type === 'busbar' ? '#ffffff' : '#111827'
-      ctx.font = node.type === 'busbar' ? '700 11px Arial' : '700 12px Arial'
+      if (options.pointer === 'right') {
+        ctx.beginPath()
+        ctx.moveTo(left + chipWidth - 2, top + chipHeight * 0.25)
+        ctx.lineTo(left + chipWidth + px(2.5), top + chipHeight * 0.5)
+        ctx.lineTo(left + chipWidth - 2, top + chipHeight * 0.75)
+        ctx.closePath()
+        ctx.fill()
+        ctx.stroke()
+      }
+      if (options.pointer === 'left') {
+        ctx.beginPath()
+        ctx.moveTo(left + 2, top + chipHeight * 0.25)
+        ctx.lineTo(left - px(2.5), top + chipHeight * 0.5)
+        ctx.lineTo(left + 2, top + chipHeight * 0.75)
+        ctx.closePath()
+        ctx.fill()
+        ctx.stroke()
+      }
+
+      ctx.fillStyle = '#073b26'
+      ctx.font = `800 ${Math.max(12, 18 * Math.min(width / 1100, 1.1))}px Arial`
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
-      ctx.fillText(node.label, x + w / 2, y + h * 0.42)
-      ctx.font = '600 9px Arial'
-      ctx.fillStyle = node.type === 'busbar' ? '#e5e7eb' : '#64748b'
-      ctx.fillText(node.subtitle, x + w / 2, y + h * 0.7)
+      ctx.fillText(text, left + chipWidth / 2, top + chipHeight / 2 + 1)
+      ctx.restore()
+    }
 
-      if (node.meter && node.type !== 'meter') {
-        ctx.fillStyle = '#f59e0b'
+    const drawDisconnect = (x: number, y: number) => {
+      ctx.save()
+      ctx.strokeStyle = '#111827'
+      ctx.lineWidth = 2
+      ctx.beginPath()
+      ctx.moveTo(px(x - 0.6), py(y - 1.1))
+      ctx.lineTo(px(x + 0.5), py(y - 0.2))
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.arc(px(x - 0.8), py(y - 1.25), 2.3, 0, Math.PI * 2)
+      ctx.arc(px(x + 0.8), py(y + 0.15), 2.3, 0, Math.PI * 2)
+      ctx.stroke()
+      ctx.restore()
+    }
+
+    const drawBreakerCoil = (x: number, y: number) => {
+      ctx.save()
+      ctx.strokeStyle = '#111827'
+      ctx.lineWidth = 2
+      for (let i = 0; i < 4; i += 1) {
         ctx.beginPath()
-        ctx.arc(x + w - 10, y + 10, 9, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.fillStyle = '#ffffff'
-        ctx.font = '700 8px Arial'
-        ctx.fillText(node.meter, x + w - 10, y + 10)
+        ctx.moveTo(px(x - 0.4), py(y + i * 0.45))
+        ctx.lineTo(px(x + 0.4), py(y + i * 0.45 - 0.2))
+        ctx.stroke()
       }
-    })
+      ctx.restore()
+    }
 
+    const drawFactory = () => {
+      ctx.save()
+      ctx.globalAlpha = 0.72
+      ctx.strokeStyle = '#cbd5e1'
+      ctx.fillStyle = 'rgba(248, 250, 252, 0.45)'
+      ctx.lineWidth = 1.2
+
+      const cylinder = (x: number, y: number, w: number, h: number) => {
+        ctx.beginPath()
+        ctx.ellipse(px(x + w / 2), py(y), px(w / 2), py(1.4), 0, 0, Math.PI * 2)
+        ctx.stroke()
+        ctx.beginPath()
+        ctx.moveTo(px(x), py(y))
+        ctx.lineTo(px(x), py(y + h))
+        ctx.ellipse(px(x + w / 2), py(y + h), px(w / 2), py(1.4), 0, 0, Math.PI)
+        ctx.lineTo(px(x + w), py(y))
+        ctx.stroke()
+      }
+
+      drawLine([[56, 42], [68, 32], [98, 42], [86, 55], [56, 42]], { width: 1, color: '#d1d5db' })
+      for (let i = 0; i < 4; i += 1) cylinder(67 + i * 4, 9 + i * 1.5, 5.2, 16)
+      cylinder(92, 22, 5.8, 20)
+
+      ctx.strokeRect(px(79), py(4), px(6), py(24))
+      for (let i = 0; i < 5; i += 1) {
+        ctx.beginPath()
+        ctx.moveTo(px(79), py(8 + i * 4))
+        ctx.lineTo(px(85), py(6 + i * 4))
+        ctx.stroke()
+      }
+      drawLine([[58, 28], [70, 16], [78, 15]], { width: 1.2, color: '#cbd5e1' })
+      drawLine([[83, 25], [92, 36], [95, 34]], { width: 1.2, color: '#cbd5e1' })
+      drawLine([[69, 48], [78, 55], [93, 48]], { width: 1.2, color: '#cbd5e1' })
+
+      ctx.strokeRect(px(76), py(31), px(8), py(7))
+      ctx.strokeRect(px(88), py(47), px(10), py(12))
+      ctx.strokeRect(px(66), py(43), px(5), py(10))
+      cylinder(73, 40, 4.5, 10)
+      cylinder(69, 36, 4, 11)
+      cylinder(64, 33, 4, 12)
+
+      ctx.globalAlpha = 1
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.68)'
+      ctx.fillRect(px(53), 0, px(47), py(63))
+      ctx.restore()
+    }
+
+    ctx.clearRect(0, 0, width, height)
+    ctx.fillStyle = '#ffffff'
+    ctx.fillRect(0, 0, width, height)
+    drawFactory()
+
+    ctx.save()
+    ctx.fillStyle = '#cfefd8'
+    ctx.fillRect(0, py(90), width, py(10))
+    ctx.restore()
+
+    drawLabel('Poste de livraison', 9.6, 4.9, { size: 19, weight: 700 })
+    drawLabel('CIE 630 kVA', 9.6, 9.1, { size: 18, weight: 700 })
+    drawLine([[18.5, 6], [25.7, 6], [25.7, 14]], { width: 4 })
+
+    ctx.save()
+    ctx.strokeStyle = '#111827'
+    ctx.lineWidth = 3
+    ctx.beginPath()
+    ctx.arc(px(25.7), py(18), px(3.1), 0, Math.PI * 2)
+    ctx.stroke()
+    ctx.beginPath()
+    ctx.arc(px(25.7), py(23), px(3.1), 0, Math.PI * 2)
+    ctx.stroke()
+    ctx.restore()
+
+    drawLine([[25.7, 26], [25.7, 30.5], [17.5, 30.5], [17.5, 45], [34, 45], [34, 30.5], [25.7, 30.5]], { width: 3 })
+    drawLine([[2.5, 45], [22.5, 45]], { width: 4 })
+    drawLine([[28, 45], [59, 45]], { width: 4 })
+    drawLabel('Masterpact 2500A - TGBT 1', 13.5, 41.8, { size: 17, weight: 800 })
+    drawLabel('Masterpact 3200A - TGBT 2', 45, 41.8, { size: 17, weight: 800 })
+
+    drawChip('C1', 12, 32, { pointer: 'right', active: isActive('c1') })
+    drawChip('C2', 36, 32, { pointer: 'left', active: isActive('c2') })
+    drawBreakerCoil(17.5, 36.4)
+    drawBreakerCoil(34, 36.4)
+
+    ctx.save()
+    ctx.strokeStyle = isActive('target-zone') ? '#059669' : '#6ee7a8'
+    ctx.lineWidth = isActive('target-zone') ? 3.5 : 3
+    ctx.beginPath()
+    ctx.roundRect(px(2.7), py(56), px(60), py(27), 8)
+    ctx.stroke()
+    ctx.restore()
+
+    drawLine([[9.5, 45], [9.5, 51], [9.5, 67]], { width: isActive('c3') ? 3.5 : 3 })
+    drawDisconnect(9.5, 51)
+    drawBreakerCoil(9.5, 56)
+    drawLabel('Usinage fèves', 9.5, 63, { size: 13, weight: 700, rotate: true })
+    drawChip('C3', 7.2, 75.8, { pointer: 'none', active: isActive('c3') })
+
+    drawLine([[29.5, 45], [29.5, 51], [29.5, 67]], { width: isActive('c4') ? 3.5 : 3 })
+    drawDisconnect(29.5, 51)
+    drawBreakerCoil(29.5, 56)
+    drawLabel('Compact', 24.2, 52.1, { size: 12, weight: 700 })
+    drawLabel('NS 1660H', 24.2, 55.3, { size: 12, weight: 700 })
+    drawLabel('Séchoir', 29.5, 64, { size: 13, weight: 700, rotate: true })
+    drawChip('C4', 27.2, 75.8, { pointer: 'none', active: isActive('c4') })
+
+    drawLine([[41.5, 45], [41.5, 51], [41.5, 67]], { width: isActive('c5') ? 3.5 : 3 })
+    drawDisconnect(41.5, 51)
+    drawBreakerCoil(41.5, 56)
+    drawLabel('NSX 630N', 45.8, 52.4, { size: 13, weight: 700 })
+    drawLabel('Administration', 41.5, 64, { size: 13, weight: 700, rotate: true })
+    drawChip('C5', 39.2, 75.8, { pointer: 'none', active: isActive('c5') })
+
+    drawLine([[53.5, 45], [53.5, 67]], { width: isActive('c6') ? 3.5 : 3, dash: [8, 7] })
+    drawLabel('Compteur gaz', 53.5, 61.2, { size: 12, weight: 700, rotate: true })
+    drawLabel('séchoir', 55.2, 61.2, { size: 12, weight: 700, rotate: true })
+    drawChip('C6', 51.2, 75.8, { pointer: 'none', active: isActive('c6') })
+
+    ctx.save()
+    ctx.fillStyle = '#69d893'
+    ctx.beginPath()
+    ctx.roundRect(px(65.2), py(68.4), px(22), py(5.2), 8)
+    ctx.fill()
+    ctx.beginPath()
+    ctx.moveTo(px(65.2), py(68.4))
+    ctx.lineTo(px(62.4), py(71))
+    ctx.lineTo(px(65.2), py(73.6))
+    ctx.closePath()
+    ctx.fill()
+    ctx.fillStyle = '#073b26'
+    ctx.font = `800 ${Math.max(12, 15 * Math.min(width / 1100, 1.1))}px Arial`
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText('Zones Cibles : Process et Utilités', px(76.2), py(71))
+    ctx.restore()
+
+    ctx.save()
+    ctx.fillStyle = '#0f172a'
+    ctx.font = `800 ${Math.max(13, 16 * Math.min(width / 1100, 1.1))}px Arial`
     ctx.textAlign = 'left'
-    ctx.textBaseline = 'alphabetic'
-    ctx.fillStyle = '#475569'
-    ctx.font = '700 12px Arial'
-    ctx.fillText('SCHÉMA UNIFILAIRE ACC - REPRODUCTION INTERACTIVE', px(3), py(4))
-    ctx.font = '10px Arial'
-    ctx.fillText('Cliquez sur un disjoncteur, jeu de barres, départ ou compteur pour afficher le détail.', px(3), py(6.5))
+    ctx.textBaseline = 'middle'
+    ctx.fillText('Alignement EMS / Unifilaire :', px(3.2), py(94.4))
+    ctx.font = `600 ${Math.max(12, 15 * Math.min(width / 1100, 1.08))}px Arial`
+    ctx.fillText('Le plan de comptage cible les TGBT (C1/C2) et les 4 départs névralgiques (C3 à C6) pour une supervision granulaire multi-énergies (Élec/Gaz).', px(22.7), py(94.4))
+    ctx.restore()
+
+    const activeNode = hoveredId ?? selectedId
+    const node = ACC_REFERENCE_SCHEMA_NODES.find((item) => item.id === activeNode)
+    if (node) {
+      ctx.save()
+      ctx.strokeStyle = '#f59e0b'
+      ctx.lineWidth = 2.5
+      ctx.setLineDash([5, 4])
+      ctx.beginPath()
+      ctx.roundRect(px(node.x - 0.4), py(node.y - 0.5), px(node.w + 0.8), py(node.h + 1), 8)
+      ctx.stroke()
+      ctx.restore()
+    }
   }, [hoveredId, selectedId])
 
   function findNode(clientX: number, clientY: number) {
@@ -1352,28 +1458,28 @@ function AccSingleLineCanvas() {
     const x = ((clientX - rect.left) / rect.width) * 100
     const y = ((clientY - rect.top) / rect.height) * 100
 
-    return ACC_SINGLE_LINE_NODES.find((node) =>
+    return ACC_REFERENCE_SCHEMA_NODES.find((node) =>
       x >= node.x && x <= node.x + node.w && y >= node.y && y <= node.y + node.h
     )
   }
 
   return (
-    <div className="grid h-full min-h-[620px] grid-cols-[1fr_290px] gap-4">
+    <div className="grid h-full min-h-[700px] grid-cols-[1fr_300px] gap-4">
       <div className="rounded-xl border border-gray-200 bg-white p-4">
-        <div className="mb-3 flex items-center justify-between">
+        <div className="mb-3 flex items-center justify-between gap-4">
           <div>
-            <p className="text-base font-semibold text-black">Schéma unifilaire ACC</p>
-            <p className="mt-0.5 text-base text-black">Arrivée, protections, TGBT 1/2, départs process et points C1 à C6</p>
+            <p className="text-base md:text-lg font-semibold text-black">Schéma unifilaire ACC</p>
+            <p className="mt-0.5 text-base text-black">Plan de comptage cible C1 à C6 · TGBT, process et utilités</p>
           </div>
-          <div className="flex items-center gap-3 text-base text-black">
-            <span className="flex items-center gap-1"><span className="h-2 w-2 rounded bg-amber-100 ring-1 ring-amber-300" /> Compteur</span>
-            <span className="flex items-center gap-1"><span className="h-2 w-4 rounded bg-gray-900" /> Jeu de barres</span>
-            <span className="flex items-center gap-1"><span className="h-2 w-2 rounded bg-white ring-1 ring-gray-300" /> Départ</span>
+          <div className="flex flex-wrap items-center justify-end gap-3 text-base text-black">
+            <span className="flex items-center gap-1"><span className="h-3 w-5 rounded bg-[#7bd99c] ring-1 ring-emerald-300" /> Point EMS</span>
+            <span className="flex items-center gap-1"><span className="h-1 w-6 bg-gray-900" /> Puissance</span>
+            <span className="flex items-center gap-1"><span className="h-1 w-6 border-t-2 border-dashed border-gray-900" /> Gaz</span>
           </div>
         </div>
         <canvas
           ref={canvasRef}
-          className="h-[540px] w-full cursor-crosshair rounded-lg border border-gray-100"
+          className="h-[600px] w-full cursor-crosshair rounded-lg border border-gray-100 bg-white"
           onMouseMove={(event) => setHoveredId(findNode(event.clientX, event.clientY)?.id ?? null)}
           onMouseLeave={() => setHoveredId(null)}
           onClick={(event) => {
@@ -1385,11 +1491,11 @@ function AccSingleLineCanvas() {
 
       <aside className="rounded-xl border border-gray-200 bg-white p-4">
         <p className="text-base font-semibold uppercase tracking-widest text-black">Sélection</p>
-        <h2 className="mt-2 text-base font-semibold text-black">{selectedNode.label}</h2>
+        <h2 className="mt-2 text-base md:text-lg font-semibold text-black">{selectedNode.label}</h2>
         <p className="mt-1 text-base font-semibold uppercase tracking-widest text-black">{selectedNode.subtitle}</p>
         <p className="mt-3 text-base leading-relaxed text-black">{selectedNode.detail}</p>
         {selectedNode.meter && (
-          <span className="mt-3 inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-base font-semibold text-amber-800">
+          <span className="mt-3 inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-base font-semibold text-emerald-800">
             Point mesure {selectedNode.meter}
           </span>
         )}
@@ -1399,15 +1505,15 @@ function AccSingleLineCanvas() {
           <div className="space-y-2 text-base">
             <div className="rounded-lg border border-gray-100 bg-gray-50 p-2">
               <p className="font-semibold text-black">TGBT 1</p>
-              <p className="mt-1 text-base leading-relaxed text-black">C1 couvre C3, C4, C5 et les autres départs ancien TGBT.</p>
+              <p className="mt-1 text-base leading-relaxed text-black">C1 surveille le Masterpact 2500A et le départ usinage fèves C3.</p>
             </div>
             <div className="rounded-lg border border-gray-100 bg-gray-50 p-2">
               <p className="font-semibold text-black">TGBT 2</p>
-              <p className="mt-1 text-base leading-relaxed text-black">C2 couvre les broyeurs, froid, UPS, compresseurs 2 et GE J.</p>
+              <p className="mt-1 text-base leading-relaxed text-black">C2 surveille le Masterpact 3200A avec les départs C4, C5 et la zone gaz C6.</p>
             </div>
             <div className="rounded-lg border border-gray-100 bg-gray-50 p-2">
-              <p className="font-semibold text-black">Séchoir</p>
-              <p className="mt-1 text-base leading-relaxed text-black">C4 mesure l’énergie électrique, C6 mesure l’arrivée gaz.</p>
+              <p className="font-semibold text-black">Zone cible</p>
+              <p className="mt-1 text-base leading-relaxed text-black">Le cadre vert isole les usages process et utilités à superviser dans le périmètre EMS.</p>
             </div>
           </div>
         </div>
@@ -1415,7 +1521,6 @@ function AccSingleLineCanvas() {
     </div>
   )
 }
-
 function AccMassPlanCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
@@ -1600,6 +1705,157 @@ function AccMassPlanCanvas() {
   )
 }
 
+const ACC_PRODUCTION_SUMMARY = [
+  { label: 'Cacao traité', value: '110,3', unit: 't', detail: 'Journée en cours', border: 'border-l-[#23689b]', valueColor: 'text-[#23689b]', surface: 'bg-[#fbfaf4]' },
+  { label: 'Tonnage séché', value: '47,8', unit: 't', detail: 'Rdt séchoir 92%', border: 'border-l-emerald-500', valueColor: 'text-emerald-700', surface: 'bg-[#fbfaf4]' },
+  { label: 'Tonnage usiné', value: '54,2', unit: 't', detail: 'Atelier C3', border: 'border-l-violet-600', valueColor: 'text-violet-700', surface: 'bg-[#fbfaf4]' },
+  { label: 'Énergie / tonne', value: '80,9', unit: 'kWh/t', detail: '+3,7% vs cible', border: 'border-l-amber-600', valueColor: 'text-amber-700', surface: 'bg-[#fbfaf4]' },
+]
+
+const ACC_DAILY_PRODUCTION_FLOW = [
+  { label: 'Réception', value: '110,3', unit: 't', detail: 'Cacao entrant', tag: 'ACC', border: 'border-blue-200', surface: 'bg-blue-50', valueColor: 'text-[#23689b]' },
+  { label: 'Séchage', value: '47,8', unit: 't', detail: 'Sortie séchoir C4', tag: 'Rdt 92%', border: 'border-emerald-200', surface: 'bg-emerald-50', valueColor: 'text-emerald-700', bar: 92 },
+  { label: 'Usinage', value: '54,2', unit: 't', detail: 'Atelier C3', tag: 'Suivi horaire validé', border: 'border-violet-200', surface: 'bg-violet-50', valueColor: 'text-violet-700' },
+  { label: 'Énergie totale', value: '8 920', unit: 'kWh', detail: 'C1+C2 consommés', tag: 'Gaz: 410 m³', border: 'border-amber-200', surface: 'bg-amber-50', valueColor: 'text-amber-700' },
+]
+
+function AccProductionDashboard() {
+  const dateFilter = useDateFilter()
+
+  return (
+    <div className="space-y-5">
+      <section className="grid grid-cols-4 gap-4">
+        {ACC_PRODUCTION_SUMMARY.map((metric) => (
+          <article
+            key={metric.label}
+            className={`rounded-xl border border-gray-100 ${metric.border} border-l-4 ${metric.surface} p-5 shadow-sm`}
+          >
+            <p className="text-base font-semibold uppercase tracking-widest text-black">{metric.label}</p>
+            <div className="mt-2 flex items-end gap-1.5">
+              <p className={`text-3xl font-bold leading-none ${metric.valueColor}`}>{metric.value}</p>
+              <span className="pb-0.5 text-base font-bold text-black">{metric.unit}</span>
+            </div>
+            <p className="mt-2 text-base font-medium text-black">{metric.detail}</p>
+          </article>
+        ))}
+      </section>
+
+      <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-black">Flux de production journalier</h2>
+            <p className="mt-1 text-base font-medium text-black/70">ACC · Données ERP et compteurs · {dateFilter.label}</p>
+          </div>
+          <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-base font-bold text-emerald-700">
+            Chaîne cohérente
+          </span>
+        </div>
+
+        <div className="grid grid-cols-[1fr_32px_1fr_32px_1fr_32px_1fr] items-center gap-3">
+          {ACC_DAILY_PRODUCTION_FLOW.map((step, index) => (
+            <div key={step.label} className="contents">
+              <article className={`min-h-[140px] rounded-xl border ${step.border} ${step.surface} p-5 text-center shadow-sm`}>
+                <p className="text-base font-bold uppercase tracking-widest text-black/75">{step.label}</p>
+                <div className="mt-4 flex items-end justify-center gap-1.5">
+                  <p className={`text-3xl font-bold leading-none ${step.valueColor}`}>{step.value}</p>
+                  <span className="pb-0.5 text-base font-bold text-black">{step.unit}</span>
+                </div>
+                <p className="mt-3 text-base font-medium text-black">{step.detail}</p>
+                {step.bar ? (
+                  <div className="mx-auto mt-4 h-2 w-[82%] overflow-hidden rounded-full bg-white">
+                    <div className="h-full rounded-full bg-emerald-600" style={{ width: `${step.bar}%` }} />
+                  </div>
+                ) : null}
+                <span className="mt-3 inline-flex rounded-md bg-white/70 px-2.5 py-1 text-base font-bold text-black">
+                  {step.tag}
+                </span>
+              </article>
+              {index < ACC_DAILY_PRODUCTION_FLOW.length - 1 && (
+                <span className="text-center text-3xl font-light text-black/70" aria-hidden="true">
+                  &rarr;
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="grid grid-cols-2 gap-4">
+        <article className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h2 className="text-xl font-bold text-black">Tonnages cacao — Aujourd&apos;hui</h2>
+          <div className="mt-5 divide-y divide-gray-200">
+            {[
+              ['Tonnage cacao traité', '110,3 t', 'ACC', 'bg-emerald-50 text-emerald-800'],
+              ['Tonnage séché ERP', '47,8 t', 'Rdt 92%', 'bg-white text-emerald-700'],
+              ['Tonnage usiné ERP', '54,2 t', 'Atelier C3', 'bg-white text-black'],
+              ['Courbe production horaire', '', 'Voir graphique ↗', 'bg-blue-50 text-[#23689b]'],
+            ].map(([label, value, badge, badgeClass]) => (
+              <div key={label} className="flex items-center justify-between gap-4 py-3 first:pt-0">
+                <p className="text-base font-medium text-black">{label}</p>
+                <div className="flex items-center gap-3">
+                  {value && <span className="text-lg font-bold text-black">{value}</span>}
+                  <span className={`rounded-md px-2.5 py-1 text-base font-bold ${badgeClass}`}>{badge}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-3 rounded-xl bg-[#fbfaf4] p-4">
+            <p className="text-base font-medium text-black">Production horaire C1+C2 (dernier cycle)</p>
+            <div className="mt-4 flex h-16 items-end gap-1.5">
+              {[42, 52, 38, 56, 61, 48, 59, 70].map((value, index) => (
+                <span
+                  key={`${value}-${index}`}
+                  className={`flex-1 rounded-t ${index > 5 ? 'bg-[#3d8fd8]' : 'bg-[#a7c7e5]'}`}
+                  style={{ height: `${value}%` }}
+                />
+              ))}
+            </div>
+          </div>
+        </article>
+
+        <article className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h2 className="text-xl font-bold text-black">Séchage & usinage — Détail énergie</h2>
+          <div className="mt-5 divide-y divide-gray-200">
+            {[
+              ['Énergie séchoir (C4)', '2 120 kWh', 'text-violet-700'],
+              ['Gaz séchoir (C6)', '410 m³', 'text-amber-700'],
+              ['Énergie usinage (C3)', '1 760 kWh', 'text-amber-700'],
+              ['Rendement séchoir global', '92%', 'text-emerald-700'],
+            ].map(([label, value, color], index) => (
+              <div key={label} className="flex items-center justify-between gap-4 py-3 first:pt-0">
+                <p className="text-base font-medium text-black">{label}</p>
+                <div className="flex items-center gap-2">
+                  <span className={`text-lg font-bold ${color}`}>{value}</span>
+                  {index === 3 && (
+                    <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-base font-bold text-emerald-800">OK</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-5">
+            <p className="text-base font-medium text-black">Répartition énergie process séchage/usinage</p>
+            <div className="mt-3 flex h-4 overflow-hidden rounded-full bg-gray-100">
+              <span className="bg-violet-600" style={{ width: '24%' }} />
+              <span className="bg-amber-600" style={{ width: '20%' }} />
+              <span className="bg-emerald-500" style={{ width: '7%' }} />
+              <span className="bg-[#23689b]" style={{ width: '49%' }} />
+            </div>
+            <div className="mt-3 grid grid-cols-4 gap-2 text-base font-medium text-black">
+              <span className="flex items-center gap-1"><span className="h-3 w-3 rounded-sm bg-violet-600" /> Séchoir 24%</span>
+              <span className="flex items-center gap-1"><span className="h-3 w-3 rounded-sm bg-amber-600" /> Usinage 20%</span>
+              <span className="flex items-center gap-1"><span className="h-3 w-3 rounded-sm bg-emerald-500" /> Admin 7%</span>
+              <span className="flex items-center gap-1"><span className="h-3 w-3 rounded-sm bg-[#23689b]" /> TGBT 49%</span>
+            </div>
+          </div>
+        </article>
+      </section>
+    </div>
+  )
+}
+
 function productionTabForSite(site: SiteConfig): SiteTab {
   const base =
     site.slug === 'acc'
@@ -1768,13 +2024,14 @@ export default function SiteView({ site }: { site: SiteConfig }) {
   const zone = tab.zones[activeZoneIdx]
   const isAccGlobalDashboard = site.slug === 'acc' && tab.id === 'bilan'
   const isAccKpiDashboard = site.slug === 'acc' && tab.id === 'kpis'
+  const isAccProductionDashboard = site.slug === 'acc' && tab.id === 'production-data'
   const isAccPointDetail = site.slug === 'acc' && tab.id === 'detail-points'
   const isAccSingleLine = isAccPointDetail && zone.name === 'Schéma unifilaire ACC'
   const isAccMassPlan = site.slug === 'acc' && tab.id === 'carte'
   const isIndustrialSite = site.slug === 'scci-1' || site.slug === 'scci-2'
   const isIndustrialGlobalDashboard = isIndustrialSite && tab.id === 'bilan'
   const isIndustrialKpiDashboard = isIndustrialSite && tab.id === 'kpis'
-  const isFullScreenView = isAccGlobalDashboard || isAccKpiDashboard || isAccMassPlan || isIndustrialGlobalDashboard || isIndustrialKpiDashboard
+  const isFullScreenView = isAccGlobalDashboard || isAccKpiDashboard || isAccProductionDashboard || isAccMassPlan || isIndustrialGlobalDashboard || isIndustrialKpiDashboard
 
   function switchTab(i: number) {
     setActiveTabIdx(i)
@@ -1825,6 +2082,8 @@ export default function SiteView({ site }: { site: SiteConfig }) {
               <AccMassPlanCanvas />
             ) : isAccKpiDashboard ? (
               <AccKpiDashboard />
+            ) : isAccProductionDashboard ? (
+              <AccProductionDashboard />
             ) : isAccGlobalDashboard ? (
               <AccGlobalDashboard />
             ) : isIndustrialKpiDashboard ? (
