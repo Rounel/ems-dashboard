@@ -34,6 +34,7 @@ export default function AlertesPage() {
 
       {/* ── Alert list (client component) ──────────────────────────────── */}
       {/* ── Alert list (client component) ──────────────────────────────── */}
+      {/* ── Alert list (client component) ──────────────────────────────── */}
       <AlertList initialAlerts={ALERTS} />
     </div>
   )
