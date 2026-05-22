@@ -96,7 +96,6 @@ const NAV: NavSection[] = [
     items: [
       { href: '/dashboard/alertes',  label: 'Alertes groupe',    icon: I.bell, badge: 3 },
       { href: '/dashboard/rapports', label: 'Rapport consolidé', icon: I.file },
-      { href: '/dashboard/rapports', label: 'Envoi automatique', icon: I.send },
     ],
   },
   {

@@ -24,12 +24,13 @@ export default function LoginPage() {
   const [state, formAction] = useActionState<LoginState, FormData>(login, null)
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#dff5ff] text-black">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_78%,rgba(255,255,255,0.98)_0%,rgba(255,255,255,0.82)_22%,rgba(223,245,255,0.38)_46%,rgba(164,221,242,0.42)_100%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-[46vh] bg-[linear-gradient(180deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.9)_54%,#ffffff_100%)]" />
-      <div className="absolute left-1/2 top-[42%] h-[520px] w-[820px] -translate-x-1/2 rounded-[50%] border border-white/50" />
-      <div className="absolute left-1/2 top-[48%] h-[430px] w-[670px] -translate-x-1/2 rounded-[50%] border border-white/45" />
-      <div className="absolute inset-x-0 bottom-0 h-64 bg-[radial-gradient(ellipse_at_28%_58%,rgba(255,255,255,0.96)_0%,rgba(255,255,255,0.72)_28%,rgba(255,255,255,0)_55%),radial-gradient(ellipse_at_68%_64%,rgba(255,255,255,0.95)_0%,rgba(255,255,255,0.68)_30%,rgba(255,255,255,0)_58%)]" />
+    <main className="relative min-h-screen overflow-hidden bg-[#0f2a42] text-black">
+      <div className="absolute inset-0 bg-[linear-gradient(135deg,#156097_0%,#174263_34%,#0f2a42_68%,#0e9386_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.16)_0%,rgba(15,42,66,0.12)_36%,rgba(15,42,66,0.72)_100%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-[48vh] bg-[linear-gradient(180deg,rgba(14,147,134,0)_0%,rgba(14,147,134,0.24)_45%,rgba(15,42,66,0.78)_100%)]" />
+      <div className="absolute left-1/2 top-[42%] h-[520px] w-[820px] -translate-x-1/2 rounded-[50%] border border-white/18" />
+      <div className="absolute left-1/2 top-[48%] h-[430px] w-[670px] -translate-x-1/2 rounded-[50%] border border-white/14" />
+      <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(21,96,151,0.48)_0%,rgba(23,66,99,0)_42%),linear-gradient(245deg,rgba(14,147,134,0.34)_0%,rgba(15,42,66,0)_44%)]" />
 
       <div className="relative z-10 flex min-h-screen flex-col px-8 py-7">
         <div className="flex items-center gap-2">
@@ -49,7 +50,7 @@ export default function LoginPage() {
             </div> */}
 
             <div className="mt-7 text-center">
-              <h1 className="text-2xl font-bold tracking-tight text-black">Connexion</h1>
+              <h1 className="text-2xl font-bold tracking-tight text-black">Backoffice</h1>
               <p className="mx-auto mt-2 max-w-[270px] text-base leading-relaxed text-black/70">
                 Supervision des sites industriels et pilotage énergétique groupe.
               </p>

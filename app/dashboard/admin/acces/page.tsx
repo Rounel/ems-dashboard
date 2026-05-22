@@ -71,7 +71,7 @@ export default function AccesPage() {
       </div>
 
       {/* ── Alert thresholds ────────────────────────────────────────────── */}
-      <div className="rounded-xl border border-gray-200 bg-white">
+      {/* <div className="rounded-xl border border-gray-200 bg-white">
         <div className="flex items-center justify-between border-b border-gray-200 px-5 py-3">
           <p className="text-base font-semibold text-black">Seuils d&apos;alerte groupe</p>
           <span className="text-base text-black">Warning → Orange / Critique → Rouge</span>
@@ -105,7 +105,7 @@ export default function AccesPage() {
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
