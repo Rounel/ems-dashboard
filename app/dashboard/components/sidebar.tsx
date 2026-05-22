@@ -114,16 +114,16 @@ export default function Sidebar() {
     item.exact ? pathname === item.href : pathname.startsWith(item.href)
 
   return (
-    <aside className="w-68 shrink-0 flex flex-col bg-linear-to-br from-[#156097] via-[#174263] to-[#0f2a42] border-r border-gray-200 overflow-y-auto">
+    <aside className="w-68 shrink-0 flex flex-col bg-linear-to-br from-primary via-accent1 to-[#0f2a42] border-r border-gray-200 overflow-y-auto">
 
       {/* Brand */}
-      <div className="h-14 shrink-0 flex items-center gap-2.5 px-4 border-b border-gray-200">
-        <div className="w-7 h-7 shrink-0 rounded-lg flex items-center justify-center">
-          <Image src="/logo_ag.jpg" alt="Atlantic Group" width={28} height={28} style={{ width: 28, height: 'auto' }} />
+      <div className="h-16 shrink-0 flex items-center gap-2.5 px-4 border-b border-gray-200">
+        <div className="shrink-0 rounded-lg flex items-center justify-center">
+          <Image src="/logo_ag.jpg" alt="Atlantic Group" width={28} height={28} className='w-10 h-auto' />
         </div>
         <div className="min-w-0 leading-none">
           <p className="text-base font-semibold text-white">Atlantic Group</p>
-          <p className="text-base text-white mt-0.5">Supervisor</p>
+          <p className="text-base text-white">Supervisor</p>
         </div>
       </div>
 
