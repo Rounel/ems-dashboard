@@ -24,7 +24,7 @@ export default function AlertesPage() {
           { label: 'Type Opérationnel',    v: operationnel,  color: 'text-indigo-600', bg: critiques > 0 ? 'bg-red-500' : 'bg-emerald-500'},
         ].map(({ label, v, color, bg }) => (
           <div key={label} className={`rounded-xl overflow-hidden border border-gray-200 ${bg}`}>
-            <p className="text-base font-medium bg-black text-white uppercase tracking-wider">{label}</p>
+            <p className="text-base font-medium bg-black text-white text-center py-1 uppercase tracking-wider">{label}</p>
             <div className="p-5">
               <p className={`mt-2 text-center text-5xl font-bold text-white`}>{v}</p>
             </div>
