@@ -18,14 +18,16 @@ export default function AlertesPage() {
       {/* ── Summary ────────────────────────────────────────────────────── */}
       <div className="grid grid-cols-4 gap-4">
         {[
-          { label: 'Alertes actives',      v: active,        color: active > 0 ? 'text-amber-600' : 'text-emerald-600' },
-          { label: 'Critiques non traitées',v: critiques,    color: critiques > 0 ? 'text-red-600' : 'text-emerald-600' },
-          { label: 'Type Administrateur',  v: admin,         color: 'text-blue-600'  },
-          { label: 'Type Opérationnel',    v: operationnel,  color: 'text-indigo-600'},
-        ].map(({ label, v, color }) => (
-          <div key={label} className="rounded-xl border border-gray-200 bg-white p-5">
-            <p className="text-base font-medium uppercase tracking-wider text-black">{label}</p>
-            <p className={`mt-2 text-base font-bold ${color}`}>{v}</p>
+          { label: 'Alertes actives',      v: active,        color: active > 0 ? 'text-amber-600' : 'text-emerald-600', bg: active > 0 ? 'bg-amber-500' : 'bg-emerald-500' },
+          { label: 'Critiques non traitées',v: critiques,    color: critiques > 0 ? 'text-red-600' : 'text-emerald-600', bg: critiques > 0 ? 'bg-red-500' : 'bg-emerald-500' },
+          { label: 'Type Administrateur',  v: admin,         color: 'text-blue-600',  bg: critiques > 0 ? 'bg-red-500' : 'bg-emerald-500'  },
+          { label: 'Type Opérationnel',    v: operationnel,  color: 'text-indigo-600', bg: critiques > 0 ? 'bg-red-500' : 'bg-emerald-500'},
+        ].map(({ label, v, color, bg }) => (
+          <div key={label} className={`rounded-xl overflow-hidden border border-gray-200 ${bg}`}>
+            <p className="text-base font-medium bg-black text-white uppercase tracking-wider">{label}</p>
+            <div className="p-5">
+              <p className={`mt-2 text-center text-5xl font-bold text-white`}>{v}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -35,3 +37,5 @@ export default function AlertesPage() {
     </div>
   )
 }
+
+

@@ -1,6 +1,6 @@
 import SectionHeader from './components/section-header'
 import { Flame, Fuel, Zap } from 'lucide-react'
-import { SITES } from '@/app/lib/mock-data'
+import { ALERTS, SITES } from '@/app/lib/mock-data'
 
 const SITE_OVERVIEW = [
   {
@@ -104,6 +104,7 @@ export default function DashboardPage() {
   const totalElectric = SITE_OVERVIEW.reduce((sum, site) => sum + site.electricKwh, 0)
   const totalGas = SITE_OVERVIEW.reduce((sum, site) => sum + site.gasM3, 0)
   const totalFuel = SITE_OVERVIEW.reduce((sum, site) => sum + site.fuelL, 0)
+  const activeAlerts = ALERTS.filter((a) => a.status === 'active').length
 
   const cards = [
     {
@@ -181,18 +182,16 @@ export default function DashboardPage() {
           </p>
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-base font-medium uppercase tracking-wider text-black">Consommation gaz</p>
-          <p className="mt-2 text-base lg:text-3xl font-bold text-[#9a6a14]">
-            {formatNumber(totalGas)} m³
-          </p>
-          <p className="mt-1 text-base text-black">Cumul journalier groupe</p>
+          <p className="text-base font-medium uppercase tracking-wider text-black">Points de mesure</p>
+          <p className="mt-2 text-base lg:text-3xl font-bold">26</p>
+          <p className="mt-1 text-base text-black">Somme des 3 sites</p>
         </div>
         <div className="rounded-xl border border-gray-200 bg-white p-5">
-          <p className="text-base font-medium uppercase tracking-wider text-black">Consommation carburant</p>
-          <p className="mt-2 text-base lg:text-3xl font-bold text-[#23689b]">
-            {formatNumber(totalFuel)} L
+          <p className="text-base font-medium uppercase tracking-wider text-black">Alertes actives</p>
+          <p className={`mt-2 text-base lg:text-3xl font-bold ${activeAlerts > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>
+            {activeAlerts}
           </p>
-          <p className="mt-1 text-base text-black">Cumul journalier groupe</p>
+          <p className="mt-1 text-base text-black">{ALERTS.length} alertes sur 30 jours</p>
         </div>
       </div>
 
